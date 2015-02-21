@@ -5,6 +5,10 @@ source "$UPDATE_HERE/../lib.sh"
 
 read_config
 
+function doc_update() {
+  echo "  update [FEATURE]  -- update project"
+}
+
 function update_post_pull() {
   if test -f 'Gemfile' ; then
     log bundle install

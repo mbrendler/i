@@ -1,4 +1,8 @@
 
+function doc_dir() {
+  echo '  dir FEATURE       -- display directory of the feature'
+}
+
 function run_dir() {
   local feature="$1"
   local feature_dir="$PROJECTS_DIR/$feature"
