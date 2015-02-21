@@ -5,6 +5,7 @@ function read_config() {
 
   PROJECTS_DIR=${PROJECTS_DIR-"$HOME/work"}
   LOG_FILE=${LOG_FILE-"$HOME/.i.log"}
+  I_EDITOR=${I_EDITOR-${EDITOR-vim}}
 }
 
 function log() {
