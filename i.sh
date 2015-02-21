@@ -11,6 +11,8 @@ COMMANDS_DIR="$HERE/commands"
 source "$HERE/lib.sh"
 read_config
 
+log_clear
+
 SCRIPT=$0
 CMD=$1
 
@@ -28,6 +30,8 @@ EOF
 if test "$cmd" == help ; then
   prog_help
 elif test -e "$COMMANDS_DIR/$CMD.sh" ; then
+  log_message '========================================'
+  log_message run "$0 $*"
   source "$COMMANDS_DIR/$CMD.sh"
   "run_$CMD"
 else

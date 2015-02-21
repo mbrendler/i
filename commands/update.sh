@@ -19,10 +19,10 @@ function update_features(){
     if test "$branch" = master ; then
       local changed=$(git -C "$feature_dir" status --porcelain)
       if test -z "$changed" ; then
-        git -C "$feature_dir" fetch > /dev/null
+        log git -C "$feature_dir" fetch
         let change_count=$(git -C "$feature_dir" rev-list HEAD...origin/master --count)
         if test $change_count -ne 0 ; then
-          git -C "$feature_dir" pull > /dev/null
+          log git -C "$feature_dir" pull
           # TODO: prepare: bundle, migrate, ...
           # TODO: restart pow
           echo "updated ($change_count)"
