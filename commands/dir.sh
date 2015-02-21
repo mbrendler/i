@@ -10,9 +10,11 @@ function run_dir() {
     if test -e "$feature_dir"; then
       echo "$feature_dir"
     else
-      echo "Not installed feature '$feature'"
+      >&2 echo "Not installed feature '$feature'"
+      exit 1
     fi
   else
-    echo "Usage: $0 dir FEATURE"
+    >&2 echo "Usage: $0 dir FEATURE"
+    exit 1
   fi
 }
