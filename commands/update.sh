@@ -13,6 +13,14 @@ function update_post_pull() {
     log bundle exec rake db:migrate
     log git reset --hard
   fi
+
+  if test -f 'package.json' ; then
+    log npm install
+  fi
+  if test -f 'bower' ; then
+    log bower install
+  fi
+
   if test -f 'config.ru' ; then
     mkdir -p 'tmp'
     touch tmp/restart.txt
