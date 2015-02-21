@@ -33,7 +33,8 @@ elif test -e "$COMMANDS_DIR/$CMD.sh" ; then
   log_message '========================================'
   log_message run "$0 $*"
   source "$COMMANDS_DIR/$CMD.sh"
-  "run_$CMD"
+  shift
+  "run_$CMD" "$*"
 else
   prog_help
   exit 1
