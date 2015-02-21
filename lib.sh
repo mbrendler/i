@@ -18,7 +18,7 @@ function log_message() {
 }
 
 function log_clear() {
-  rm "$LOG_FILE"
+  rm -f "$LOG_FILE"
 }
 
 function installed_features() {
