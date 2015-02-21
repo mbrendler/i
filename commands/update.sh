@@ -3,6 +3,8 @@
 UPDATE_HERE="$(python -c "import os; print(os.path.dirname(os.path.realpath('$BASH_SOURCE')))")"
 source "$UPDATE_HERE/../lib.sh"
 
+read_config
+
 function update_features(){
   local features=$(installed_features)
   local max_length=0
@@ -11,7 +13,7 @@ function update_features(){
   done
 
   for feature in $features ; do
-    local feature_dir="$INVISION_WORK/$feature"
+    local feature_dir="$PROJECTS_DIR/$feature"
     local branch=$(git -C "$feature_dir" symbolic-ref -q --short HEAD 2>/dev/null)
     printf "%-${max_length}s - " "$feature"
     if test "$branch" = master ; then

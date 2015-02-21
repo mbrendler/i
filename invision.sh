@@ -1,10 +1,11 @@
 #! /bin/bash
 
-CONFIG_FILE="$HOME/.invision"
+# because BSDs 'readlink' does not support '-f' option:
+HERE="$(python -c "import os; print(os.path.dirname(os.path.realpath('$BASH_SOURCE')))")"
+COMMANDS_DIR="$HERE/commands"
 
-test -e "$CONFIG_FILE" && source "$CONFIG_FILE"
-
-INVISION_WORK="$HOME/work"  # TODO: configure in $CONFIG_FILE
+source "$HERE/lib.sh"
+read_config
 
 SCRIPT=$0
 CMD=$1
@@ -14,15 +15,11 @@ function prog_help(){
 $SCRIPT CMD [OPTIONS]
 
   help              -- show help overview
-  install [FEATURE] -- install InVision project
+  install [FEATURE] -- install project
   installed         -- list installed features
-  update [FEATURE]  -- update InVision project
+  update [FEATURE]  -- update project
 EOF
 }
-
-# because BSDs 'readlink' does not support '-f' option:
-HERE="$(python -c "import os; print(os.path.dirname(os.path.realpath('$BASH_SOURCE')))")"
-COMMANDS_DIR="$HERE/commands"
 
 if test "$cmd" == help ; then
   prog_help
