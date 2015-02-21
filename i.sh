@@ -1,5 +1,9 @@
 #! /bin/bash
 
+if test "${DEBUG+x}" ; then
+  set -ex
+fi
+
 # because BSDs 'readlink' does not support '-f' option:
 HERE="$(python -c "import os; print(os.path.dirname(os.path.realpath('$BASH_SOURCE')))")"
 COMMANDS_DIR="$HERE/commands"
