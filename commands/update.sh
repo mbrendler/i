@@ -5,6 +5,20 @@ source "$UPDATE_HERE/../lib.sh"
 
 read_config
 
+function update_post_pull() {
+  if test -f 'Gemfile' ; then
+    log bundle install
+  fi
+  if test -d 'db' ; then
+    log bundle exec rake db:migrate
+    log git reset --hard
+  fi
+  if test -f 'config.ru' ; then
+    mkdir -p 'tmp'
+    touch tmp/restart.txt
+  fi
+}
+
 function update_feature() {
   local feature=$1
   local max_length=${2-0}
@@ -14,17 +28,19 @@ function update_feature() {
     echo "Not installed feature '$feature'"
     exit 1
   fi
-  local branch=$(git -C "$feature_dir" symbolic-ref -q --short HEAD 2>/dev/null)
+
+  log_message update "$feature"
+  log pushd "$feature_dir"
+  local branch=$(git symbolic-ref -q --short HEAD 2>/dev/null)
   printf "%-${max_length}s - " "$feature"
   if test "$branch" = master ; then
-    local changed=$(git -C "$feature_dir" status --porcelain --untracked-files=no)
+    local changed=$(git status --porcelain --untracked-files=no)
     if test -z "$changed" ; then
-      log git -C "$feature_dir" fetch
-      let change_count=$(git -C "$feature_dir" rev-list HEAD...origin/master --count)
+      log git fetch
+      let change_count=$(git rev-list HEAD...origin/master --count)
       if test $change_count -ne 0 ; then
-        log git -C "$feature_dir" pull
-        # TODO: prepare: bundle, migrate, ...
-        # TODO: restart pow
+        log git pull
+        update_post_pull
         echo "updated ($change_count)"
       else
         echo "up-to-date"
@@ -35,6 +51,7 @@ function update_feature() {
   else
     echo "ignored - not on master"
   fi
+  log popd
 }
 
 function update_features() {
@@ -50,7 +67,7 @@ function update_features() {
 }
 
 function run_update() {
-  if test $# -eq 0 ; then
+  if test $# -eq 0 || test -z "$1" ; then
     update_features
   else
     update_feature "$*"
