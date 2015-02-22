@@ -29,3 +29,24 @@ function installed_features() {
     fi
   done
 }
+
+function get_feature_name_from_path() {
+  local path="$1"
+  echo "$path" | sed -ne "s#^$PROJECTS_DIR/\\([^/]*\\).*\$#\\1#p"
+}
+
+function get_feature_name() {
+  local command="$1"
+  local given_feature="$2"
+  local feature_of_pwd="$(get_feature_name_from_path "$PWD")"
+  if test -n "$given_feature" ; then
+    echo "$given_feature"
+  elif test -n "$feature_of_pwd" ; then
+    echo "$feature_of_pwd"
+  else
+    >&2 echo "Usage: $0 $command FEATURE"
+    >&2 echo "       $0 $command # in feature directory"
+    exit 1
+  fi
+}
+
