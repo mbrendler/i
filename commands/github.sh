@@ -5,5 +5,9 @@ function doc_github() {
 
 function run_github() {
   local feature="$(get_feature_name github "$1")"
-  test -n "$feature" && open "$I_GITHUB_BASE_URL/$feature"
+  if test -n "$feature" ; then
+    open "$I_GITHUB_BASE_URL/$feature"
+    sleep 0.1
+    log osascript "$HERE/go_to_window.scpt"
+  fi
 }
