@@ -1,0 +1,28 @@
+#compdef i
+
+__all_features() {
+  _feature_names=( $(i installed) )
+  compadd "$@" -k _feature_names
+}
+
+if (( CURRENT > 2 )); then
+  (( CURRENT-- ))
+  shift words
+  local argument="$(i help | grep "${words[1]}" | awk '{print $2}')"
+  if test "$argument" = 'FEATURE' || test "$argument" = '[FEATURE]' ; then
+    _arguments "*:feature_name:__all_features"
+  fi
+else
+  cmds=("${(@f)$(i help | sed -nEe 's#^  ([^ ]*)[^-]*-- (.*)#\1[\2]#p')}")
+  _values "i command" $cmds
+fi
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et
+
+
