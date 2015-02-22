@@ -8,7 +8,7 @@ __all_features() {
 if (( CURRENT > 2 )); then
   (( CURRENT-- ))
   shift words
-  local argument="$(i help | grep "${words[1]}" | awk '{print $2}')"
+  local argument="$(i help | grep "^\s\s${words[1]}" | awk '{print $2}')"
   if test "$argument" = 'FEATURE' || test "$argument" = '[FEATURE]' ; then
     _arguments "*:feature_name:__all_features"
   fi
