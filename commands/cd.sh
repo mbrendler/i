@@ -5,14 +5,14 @@ function doc_cd() {
 
 function run_cd() {
   cat << EOF
-To use this, add the following to your ~/.zshrc:
+# To use this, add the following to your ~/.zshrc:
 
 function i {
-  if test "$1" = cd ; then
+  if test "\$1" = cd ; then
     shift
-    cd "$(command i dir "$@")"
+    cd "\$(command i dir "\$@")"
   else
-    command i "$@"
+    command i "\$@"
   fi
 }
 EOF
