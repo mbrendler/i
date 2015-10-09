@@ -5,12 +5,27 @@ __all_features() {
   compadd "$@" -k _feature_names
 }
 
+__all_iwfms() {
+  _iwfm=( $(i iwfm list) )
+  compadd "$@" -k _iwfm
+}
+
 if (( CURRENT > 2 )); then
   (( CURRENT-- ))
   shift words
   local argument="$(i help | grep "^\s\s${words[1]}" | awk '{print $2}')"
   if test "$argument" = 'FEATURE' || test "$argument" = '[FEATURE]' ; then
     _arguments "*:feature_name:__all_features"
+  elif test "$argument" = 'CMD' ; then
+    if (( CURRENT > 2)) ; then
+      (( CURRENT-- ))
+      shift words
+      local argument="$(i ${words[0]} help | grep "^\s\s${words[1]}" | awk '{print $2}')"
+      _arguments "*:iwfm:__all_iwfms"
+    else
+      cmds=("${(@f)$(i ${words[1]} help | sed -nEe 's#^  ([^ ]*)[^-]*-- (.*)#\1[\2]#p')}")
+      _values "i command" $cmds
+    fi
   fi
 else
   cmds=("${(@f)$(i help | sed -nEe 's#^  ([^ ]*)[^-]*-- (.*)#\1[\2]#p')}")
