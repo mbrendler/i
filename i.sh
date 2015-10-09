@@ -38,4 +38,4 @@ log_message '========================================'
 log_message run "$0 $*"
 source "$COMMANDS_DIR/$CMD.sh"
 shift
-"run_$CMD" "$*"
+"run_$CMD" $*
