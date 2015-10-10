@@ -1,7 +1,7 @@
 #compdef i
 
 __all_features() {
-  _feature_names=( $(i installed) )
+  _feature_names=( $(i list) )
   compadd "$@" -k _feature_names
 }
 
