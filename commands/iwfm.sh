@@ -75,9 +75,13 @@ function run_iwfm_stop() {
   rake "server:$iwfm:stop[$tenant]"
 }
 
+function iwfm_all_injixo_tenants() {
+  local injixo_iwfm_config_dir="$HOME/.wine/drive_c/iwfmcommon/injixo/"
+  find "$injixo_iwfm_config_dir" -name tcpip.\* | sed -e 's/^.*\.\([[:digit:]]\)$/\1/g' | tr '\n' ' '
+}
+
 function run_iwfm_list() {
-  local tenants="$(ls ~/.wine/drive_c/iwfmcommon/injixo/tcpip.* | sed -e 's/^.*\.\([[:digit:]]\)$/\1/g' | tr '\n' ' ')"
-  echo 306 307 "$tenants"
+  echo 306 307 "$(iwfm_all_injixo_tenants)"
 }
 
 function run_iwfm_help() {
