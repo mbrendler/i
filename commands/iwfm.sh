@@ -87,15 +87,9 @@ function iwfm_all_injixo_tenants() {
 
 function iwfm_type_by_name() {
   case "$1" in
-    306*)
-      echo classic306
-      ;;
-    307*)
-      echo classic
-      ;;
-    *)
-      echo injixo
-      ;;
+    306*) echo classic306 ;;
+    307*) echo classic ;;
+    *) echo injixo ;;
   esac
 }
 
