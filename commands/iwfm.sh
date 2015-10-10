@@ -32,12 +32,16 @@ function run_iwfm() {
       run_iwfm_reset "$iwfm" "$database" "$tenant" "$language"
       ;;
     # start
-    sta*)
+    star*)
       run_iwfm_start "$tenant"
       ;;
     # stop
     sto*)
       run_iwfm_stop "$tenant"
+      ;;
+    # status
+    stat*)
+      run_iwfm_status
       ;;
     # list
     l*)
@@ -64,6 +68,7 @@ function run_iwfm_reset() {
 function run_iwfm_start() {
   local tenant=$1
   local running_script="$HOME/.wine/drive_c/iwfmcommon/running.sh"
+  # TODO: use iwfm_is_running function
   until bash "$running_script" iescon "$tenant" > /dev/null ; do
     rake "server:$iwfm:start:ies[$tenant]"
     sleep 0.2
@@ -80,6 +85,40 @@ function iwfm_all_injixo_tenants() {
   find "$injixo_iwfm_config_dir" -name tcpip.\* | sed -e 's/^.*\.\([[:digit:]]\)$/\1/g' | tr '\n' ' '
 }
 
+function iwfm_type_by_name() {
+  case "$1" in
+    306*)
+      echo classic306
+      ;;
+    307*)
+      echo classic
+      ;;
+    *)
+      echo injixo
+      ;;
+  esac
+}
+
+function iwfm_is_running() {
+  local server=${1-iescon}
+  local tenant=$2
+  local type
+  type=$(iwfm_type_by_name "$name")
+  test ! "$type" = injixo && tenant=
+  pgrep -f "wine\.bin $server .*$type/isps\.$tenant\.?cfg"
+}
+
+function run_iwfm_status() {
+  printf "%6s - %3s %3s\n" iwfm ies ihs
+  for name in 306 307 $(iwfm_all_injixo_tenants) ; do
+    local ies
+    ies=$(yesno iwfm_is_running iescon "$name")
+    local ihs
+    ihs=$(yesno iwfm_is_running ihscon "$name")
+    printf "%6s - %3s %3s\n" "$name" "$ies" "$ihs"
+  done
+}
+
 function run_iwfm_list() {
   echo 306 307 "$(iwfm_all_injixo_tenants)"
 }
@@ -90,6 +129,7 @@ function run_iwfm_help() {
   echo '  reset IWFM -- clear database and restart iWFM-wine iWFM'
   echo '  start IWFM -- start iWFM-wine iWFM'
   echo '  stop IWFM  -- stop iWFM-wine iWFM'
+  echo '  status     -- status of all iWFM-wine iWFMs'
   echo '  list       -- list iWFM-wine iWFMs'
   echo "  help       -- this help message"
 }
