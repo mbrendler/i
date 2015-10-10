@@ -8,29 +8,12 @@ function run_iwfm() {
   local name=$2
   log pushd "$PROJECTS_DIR/iwfm-wine"
   case "$1" in
-    # reset
-    r*)
-      run_iwfm_reset "$name"
-      ;;
-    # start
-    star*)
-      run_iwfm_start "$name"
-      ;;
-    # stop
-    sto*)
-      run_iwfm_stop "$name"
-      ;;
-    # status
-    stat*)
-      run_iwfm_status
-      ;;
-    # list
-    l*)
-      run_iwfm_list
-      ;;
-    *)
-      run_iwfm_help
-      ;;
+    r*) run_iwfm_reset "$name" ;;
+    star*) run_iwfm_start "$name" ;;
+    sto*) run_iwfm_stop "$name" ;;
+    stat*) run_iwfm_status ;;
+    l*) run_iwfm_list ;;
+    *) run_iwfm_help ;;
   esac
   log popd
 }
