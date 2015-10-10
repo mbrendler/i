@@ -1,6 +1,6 @@
 
 function doc_dir() {
-  echo '  dir FEATURE       -- display directory of the feature'
+  echo '  dir FEATURE       -- display path to feature'
 }
 
 function run_dir() {
