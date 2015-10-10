@@ -24,11 +24,6 @@ function update_post_pull() {
   if test -f 'bower' ; then
     log bower install
   fi
-
-  if test -f 'config.ru' ; then
-    mkdir -p 'tmp'
-    touch tmp/restart.txt
-  fi
 }
 
 function update_feature() {
