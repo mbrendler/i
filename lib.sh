@@ -9,6 +9,10 @@ function read_config() {
   I_GITHUB_BASE_URL=$I_GITHUB_BASE_URL
 }
 
+function yesno() {
+  log $* && echo yes || echo no
+}
+
 function log() {
   log_message "$*"
   $* >> "$LOG_FILE" 2>&1
