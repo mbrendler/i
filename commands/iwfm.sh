@@ -33,10 +33,32 @@ function run_iwfm_reset() {
 function run_iwfm_start() {
   local name=$1
   local type; type=$(iwfm_type_by_name "$name")
+  if log iwfm_is_running iescon "$name" > /dev/null ; then
+    echo "iWFM $name is already running"
+    return
+  fi
   until log iwfm_is_running iescon "$name" > /dev/null ; do
     rake "server:$type:start:ies[$name]"
     sleep 0.2
   done
+  until log iwfm_startup_is_completed "$name" > /dev/null ; do
+    sleep 0.2
+  done
+}
+
+function iwfm_startup_is_completed() {
+  grep 'startup completed' "$(iwfm_log_file "$1")"
+}
+
+function iwfm_log_file() {
+  local name=$1
+  local type
+  type=$(iwfm_type_by_name "$name")
+  if test "$type" == injixo ; then
+    echo ~/Library/Logs/iwfm/injixo/iescon."$name".log
+  else
+    echo ~/Library/Logs/iwfm/"$type"/iescon.log
+  fi
 }
 
 function run_iwfm_stop() {
