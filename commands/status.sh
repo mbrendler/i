@@ -1,7 +1,7 @@
 #! /bin/bash
 
 function doc_status() {
-  echo '  status   -- show status information'
+  echo '  status            -- show status information'
 }
 
 function run_status() {
