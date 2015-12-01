@@ -1,7 +1,9 @@
 #! /bin/bash
 
+set -euo pipefail
+
 if test "${DEBUG+x}" ; then
-  set -ex
+  set -x
 fi
 
 # because BSDs 'readlink' does not support '-f' option:

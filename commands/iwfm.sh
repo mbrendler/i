@@ -5,7 +5,7 @@ function doc_iwfm() {
 }
 
 function run_iwfm() {
-  local name=$2
+  local name=${2-}
   log pushd "$PROJECTS_DIR/iwfm-wine"
   case "$1" in
     r*) run_iwfm_reset "$name" ;;
