@@ -45,7 +45,7 @@ function get_feature_name_from_path() {
 function get_feature_name() {
   local command="$1"
   local given_feature="$2"
-  local feature_of_pwd="$(get_feature_name_from_path "$PWD")"
+  local feature_of_pwd; feature_of_pwd="$(get_feature_name_from_path "$PWD")"
   if test -n "$given_feature" ; then
     echo "$given_feature"
   elif test -n "$feature_of_pwd" ; then
