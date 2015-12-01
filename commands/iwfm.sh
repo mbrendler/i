@@ -37,11 +37,10 @@ function run_iwfm_start() {
     echo "iWFM $name is already running"
     return
   fi
-  until log iwfm_is_running iescon "$name" > /dev/null ; do
-    rake "server:$type:start:ies[$name]"
-    sleep 0.2
-  done
-  until log iwfm_startup_is_completed "$name" > /dev/null ; do
+  until log iwfm_startup_is_completed "$name" > /dev/null && log iwfm_is_running iescon "$name" > /dev/null ; do
+    if ! log iwfm_is_running iescon "$name" > /dev/null ; then
+      rake "server:$type:start:ies[$name]"
+    fi
     sleep 0.2
   done
 }
