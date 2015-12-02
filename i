@@ -34,7 +34,7 @@ function get_completed_command() {
   fi
 }
 
-get_completed_command "$1"
+get_completed_command "${1-}"
 
 log_message '========================================'
 log_message run "$0 $*"
