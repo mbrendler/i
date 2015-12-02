@@ -15,9 +15,9 @@ function run_github() {
   fi
   if test -n "$feature" ; then
     if test -n "$issue" ; then
-      open "$I_GITHUB_BASE_URL/$feature/issues/$issue"
+      open -g "$I_GITHUB_BASE_URL/$feature/issues/$issue"
     else
-      open "$I_GITHUB_BASE_URL/$feature"
+      open -g "$I_GITHUB_BASE_URL/$feature"
     fi
     sleep 0.1
     log osascript "$HERE/go_to_window.scpt"
