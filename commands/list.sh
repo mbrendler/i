@@ -6,7 +6,7 @@ source "$INSTALLED_HERE/../lib.sh"
 read_config
 
 function doc_list() {
-  echo "  list              -- list installed features"
+  echo "  list                     -- list installed features"
 }
 
 function run_list() {

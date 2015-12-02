@@ -1,6 +1,6 @@
 
 function doc_help() {
-  echo "  help              -- show help overview"
+  echo "  help                     -- show help overview"
 }
 
 function run_help() {

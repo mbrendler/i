@@ -1,7 +1,7 @@
 #! /bin/bash
 
 function doc_iwfm() {
-  echo '  iwfm CMD          -- work with iWFM-wine'
+  echo '  iwfm CMD                 -- work with iWFM-wine'
 }
 
 function run_iwfm() {

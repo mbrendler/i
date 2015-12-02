@@ -1,6 +1,6 @@
 
 function doc_cd() {
-  echo '  cd FEATURE        -- switch to feature directory'
+  echo '  cd FEATURE               -- switch to feature directory'
 }
 
 function run_cd() {
