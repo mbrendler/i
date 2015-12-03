@@ -4,12 +4,12 @@ function doc_edit() {
 }
 
 function run_edit() {
-  local feature="$(get_feature_name github "$1")"
+  local feature ; feature="$(get_feature_name edit "${1-}")"
   local feature_dir="$PROJECTS_DIR/$feature"
   if test -n "$feature" ; then
     if test -e "$feature_dir"; then
       log pushd "$feature_dir"
-      shift
+      test -n "${1-}" && shift
       exec "$I_EDITOR" "$@"
     else
       >&2 echo "Not installed feature '$feature'"
