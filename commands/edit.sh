@@ -10,8 +10,7 @@ function run_edit() {
     if test -e "$feature_dir"; then
       log pushd "$feature_dir"
       shift
-      "$I_EDITOR" "$@"
-      log popd
+      exec "$I_EDITOR" "$@"
     else
       >&2 echo "Not installed feature '$feature'"
       exit 1
