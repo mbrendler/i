@@ -12,7 +12,8 @@ function run_iwfm() {
     star*) run_iwfm_start "$name" ;;
     sto*) run_iwfm_stop "$name" ;;
     stat*) run_iwfm_status ;;
-    l*) run_iwfm_list ;;
+    li*) run_iwfm_list ;;
+    lo*) run_iwfm_log "$name" ;;
     *) run_iwfm_help ;;
   esac
   log popd
@@ -103,6 +104,10 @@ function run_iwfm_list() {
   echo 306 307 "$(iwfm_all_injixo_tenants)"
 }
 
+function run_iwfm_log() {
+  "$I_LOG_CMD" "$(iwfm_log_file "$1")"
+}
+
 function run_iwfm_help() {
   echo "$0 iwfm CMD [OPTIONS]"
   echo
@@ -111,5 +116,6 @@ function run_iwfm_help() {
   echo '  stop IWFM  -- stop iWFM-wine iWFM'
   echo '  status     -- status of all iWFM-wine iWFMs'
   echo '  list       -- list iWFM-wine iWFMs'
+  echo '  log IWFM   -- display iWFM logfile'
   echo "  help       -- this help message"
 }

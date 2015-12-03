@@ -6,6 +6,7 @@ function read_config() {
   PROJECTS_DIR=${PROJECTS_DIR-"$HOME/work"}
   LOG_FILE=${LOG_FILE-"$HOME/.i.log"}
   I_EDITOR=${I_EDITOR-${EDITOR-vim}}
+  I_LOG_CMD=${I_LOG_CMD-less}
   I_GITHUB_BASE_URL=$I_GITHUB_BASE_URL
 }
 
