@@ -54,8 +54,7 @@ function iwfm_is_startup_completed() {
 
 function iwfm_log_file() {
   local name=$1
-  local type
-  type=$(iwfm_type_by_name "$name")
+  local type; type=$(iwfm_type_by_name "$name")
   if test "$type" == injixo ; then
     echo ~/Library/Logs/iwfm/injixo/iescon."$name".log
   else
@@ -85,8 +84,7 @@ function iwfm_type_by_name() {
 function iwfm_is_running() {
   local server=${1-iescon}
   local tenant=$2
-  local type
-  type=$(iwfm_type_by_name "$name")
+  local type; type=$(iwfm_type_by_name "$name")
   test ! "$type" = injixo && tenant=
   pgrep -f "wine\.bin $server .*$type/isps\.$tenant\.?cfg"
 }
@@ -94,10 +92,8 @@ function iwfm_is_running() {
 function run_iwfm_status() {
   printf "%6s - %3s %3s\n" iwfm ies ihs
   for name in 306 307 $(iwfm_all_injixo_tenants) ; do
-    local ies
-    ies=$(yesno iwfm_is_running iescon "$name")
-    local ihs
-    ihs=$(yesno iwfm_is_running ihscon "$name")
+    local ies; ies=$(yesno iwfm_is_running iescon "$name")
+    local ihs; ihs=$(yesno iwfm_is_running ihscon "$name")
     printf "%6s - %3s %3s\n" "$name" "$ies" "$ihs"
   done
 }
