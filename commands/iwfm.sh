@@ -34,12 +34,12 @@ function run_iwfm_reset() {
 function run_iwfm_start() {
   local name=$1
   local type; type=$(iwfm_type_by_name "$name")
-  if log iwfm_is_running iescon "$name" > /dev/null ; then
+  if log iwfm_is_running iescon "$name" ; then
     echo "iWFM $name is already running"
     return
   fi
-  until log iwfm_is_startup_completed "$name" > /dev/null ; do
-    if ! log iwfm_is_running iescon "$name" > /dev/null ; then
+  until log iwfm_is_startup_completed "$name" ; do
+    if ! log iwfm_is_running iescon "$name" ; then
       rake "server:$type:start:ies[$name]"
     fi
     sleep 0.2
