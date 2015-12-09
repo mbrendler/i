@@ -7,8 +7,8 @@ if test "${DEBUG+x}" ; then
 fi
 
 # because BSDs 'readlink' does not support '-f' option:
-HERE="$(python -c "import os; print(os.path.dirname(os.path.realpath('$BASH_SOURCE')))")"
-COMMANDS_DIR="$HERE/commands"
+readonly HERE="$(python -c "import os; print(os.path.dirname(os.path.realpath('$BASH_SOURCE')))")"
+readonly COMMANDS_DIR="$HERE/commands"
 
 source "$HERE/lib.sh"
 
