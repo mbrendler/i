@@ -38,7 +38,7 @@ function run_iwfm_start() {
     echo "iWFM $name is already running"
     return
   fi
-  until log iwfm_is_startup_completed "$name" ; do
+  until log iwfm_is_startup_completed iescon "$name" ; do
     if ! log iwfm_is_running iescon "$name" ; then
       rake "server:$type:start:ies[$name]"
     fi
@@ -47,18 +47,20 @@ function run_iwfm_start() {
 }
 
 function iwfm_is_startup_completed() {
-  local name="$1"
-  grep 'startup completed' "$(iwfm_log_file "$name")" && \
-    iwfm_is_running iescon "$name"
+  local server="$1"
+  local name="$2"
+  grep 'startup completed' "$(iwfm_log_file "$server" "$name")" && \
+    iwfm_is_running "$server" "$name"
 }
 
 function iwfm_log_file() {
-  local name=$1
+  local server=$1
+  local name=$2
   local type; type=$(iwfm_type_by_name "$name")
   if test "$type" == injixo ; then
-    echo ~/Library/Logs/iwfm/injixo/iescon."$name".log
+    echo ~/Library/Logs/iwfm/injixo/"$server"."$name".log
   else
-    echo ~/Library/Logs/iwfm/"$type"/iescon.log
+    echo ~/Library/Logs/iwfm/"$type"/"$server".log
   fi
 }
 
@@ -103,7 +105,7 @@ function run_iwfm_list() {
 }
 
 function run_iwfm_log() {
-  $I_LOG_CMD "$(iwfm_log_file "$1")"
+  $I_LOG_CMD "$(iwfm_log_file iescon "$1")"
 }
 
 function run_iwfm_help() {
