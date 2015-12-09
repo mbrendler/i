@@ -11,11 +11,7 @@ HERE="$(python -c "import os; print(os.path.dirname(os.path.realpath('$BASH_SOUR
 COMMANDS_DIR="$HERE/commands"
 
 source "$HERE/lib.sh"
-read_config
 
-log_clear
-
-CMD='';
 function get_completed_command() {
   local command_files=( "$COMMANDS_DIR/$1"* )
   if test -z "$1" || test ! -f ${command_files[0]} ; then
@@ -23,21 +19,27 @@ function get_completed_command() {
     run_help
     exit 1
   elif test ${#command_files[@]} -eq 1 ; then
-    CMD="$(basename "${command_files[0]%.*}")"
+    basename "${command_files[0]%.*}"
   else
-    echo "command '$1' is ambiguous:"
-    echo -n "  "
+    >&2 echo "command '$1' is ambiguous:"
+    >&2 echo -n "  "
     for command_file in "${command_files[@]}" ; do
-      echo -n " $(basename ${command_file%.*})"
+      >&2 echo -n " $(basename ${command_file%.*})"
     done
     exit 1
   fi
 }
 
-get_completed_command "${1-}"
+function main() {
+  read_config
+  log_clear
 
-log_message '========================================'
-log_message run "$0 $*"
-source "$COMMANDS_DIR/$CMD.sh"
-shift
-"run_$CMD" $*
+  log_message '========================================'
+  log_message run "$0 $*"
+  local cmd; cmd=$(get_completed_command "$1")
+  source "$COMMANDS_DIR/$cmd.sh"
+  shift
+  "run_$cmd" "$@"
+}
+
+main "$@"
