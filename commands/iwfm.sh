@@ -109,13 +109,15 @@ function run_iwfm_log() {
 }
 
 function run_iwfm_help() {
-  echo "$0 iwfm CMD [OPTIONS]"
-  echo
-  echo '  reset IWFM -- clear database and restart iWFM-wine iWFM'
-  echo '  start IWFM -- start iWFM-wine iWFM'
-  echo '  stop IWFM  -- stop iWFM-wine iWFM'
-  echo '  status     -- status of all iWFM-wine iWFMs'
-  echo '  list       -- list iWFM-wine iWFMs'
-  echo '  log IWFM   -- display iWFM logfile'
-  echo "  help       -- this help message"
+  cat <<EOF
+$0 iwfm CMD [OPTIONS]
+
+  reset IWFM -- clear database and restart iWFM-wine iWFM
+  start IWFM -- start iWFM-wine iWFM
+  stop IWFM  -- stop iWFM-wine iWFM
+  status     -- status of all iWFM-wine iWFMs
+  list       -- list iWFM-wine iWFMs
+  log IWFM   -- display iWFM logfile
+  help       -- this help message
+EOF
 }
