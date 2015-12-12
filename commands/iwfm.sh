@@ -92,11 +92,11 @@ function iwfm_is_running() {
 }
 
 function run_iwfm_status() {
-  printf "%6s - %3s %3s\n" iwfm ies ihs
+  printf "%6s - %4s %4s\n" iwfm ies ihs
   for name in 306 307 $(iwfm_all_injixo_tenants) ; do
-    local ies; ies=$(yesno iwfm_is_running iescon "$name")
-    local ihs; ihs=$(yesno iwfm_is_running ihscon "$name")
-    printf "%6s - %3s %3s\n" "$name" "$ies" "$ihs"
+    local ies; ies=$(updown iwfm_is_running iescon "$name")
+    local ihs; ihs=$(updown iwfm_is_running ihscon "$name")
+    printf "%6s - %4s %4s\n" "$name" "$ies" "$ihs"
   done
 }
 

@@ -10,8 +10,8 @@ function read_config() {
   I_GITHUB_BASE_URL=$I_GITHUB_BASE_URL
 }
 
-function yesno() {
-  log $* && echo yes || echo no
+function updown() {
+  log "$@" && echo up || echo down
 }
 
 function log() {
