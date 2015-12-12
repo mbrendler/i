@@ -14,6 +14,7 @@ function run_iwfm() {
     stat*) run_iwfm_status ;;
     li*) run_iwfm_list ;;
     lo*) run_iwfm_log "$name" ;;
+    c*) run_iwfm_edit_config "$name" ;;
     *) run_iwfm_help ;;
   esac
   log popd
@@ -122,6 +123,21 @@ function run_iwfm_log() {
   $I_LOG_CMD "$(iwfm_log_file iescon "$1")"
 }
 
+function run_iwfm_edit_config() {
+  local name="$1"
+  local isps_cfg; isps_cfg="$(iwfm_isps_cfg "$name")"
+  "$I_EDITOR" "$isps_cfg"
+}
+
+function iwfm_isps_cfg() {
+  local name="$1"
+  case "$name" in
+    306) echo "$HOME/.wine/drive_c/iwfmcommon/classic306/isps.cfg" ;;
+    307) echo "$HOME/.wine/drive_c/iwfmcommon/classic/isps.cfg" ;;
+    *) echo "$HOME/.wine/drive_c/iwfmcommon/injixo/isps.2.cfg" ;;
+  esac
+}
+
 function run_iwfm_help() {
   cat <<EOF
 $0 iwfm CMD [OPTIONS]
@@ -132,6 +148,7 @@ $0 iwfm CMD [OPTIONS]
   status     -- status of all iWFM-wine iWFMs
   list       -- list iWFM-wine iWFMs
   log IWFM   -- display iWFM logfile
+  cfg IWFM   -- edit isps.cfg
   help       -- this help message
 EOF
 }
