@@ -16,7 +16,7 @@ function updown() {
 
 function log() {
   log_message "$*"
-  $* >> "$LOG_FILE" 2>&1
+  "$@" >> "$LOG_FILE" 2>&1
   local result=$?
   echo result: $result >> "$LOG_FILE"
   return $result
