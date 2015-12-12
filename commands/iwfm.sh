@@ -92,12 +92,26 @@ function iwfm_is_running() {
 }
 
 function run_iwfm_status() {
-  printf "%6s - %4s %4s\n" iwfm ies ihs
+  print_iwfm_status_line iwfm ies ihs port
   for name in 306 307 $(iwfm_all_injixo_tenants) ; do
     local ies; ies=$(updown iwfm_is_running iescon "$name")
     local ihs; ihs=$(updown iwfm_is_running ihscon "$name")
-    printf "%6s - %4s %4s\n" "$name" "$ies" "$ihs"
+    local ies_port; ies_port=$(iwfm_port "$name")
+    print_iwfm_status_line "$name" "$ies" "$ihs" "$ies_port"
   done
+}
+
+function print_iwfm_status_line() {
+  printf "%6s - %4s %4s %5s\n" "$@"
+}
+
+function iwfm_port() {
+  name="$1"
+  case "$name" in
+    306) cat "$HOME/.wine/drive_c/iwfmcommon/classic306/tcpip" ;;
+    307) cat "$HOME/.wine/drive_c/iwfmcommon/classic/tcpip" ;;
+    *) cat "$HOME/.wine/drive_c/iwfmcommon/injixo/tcpip.$name" ;;
+  esac
 }
 
 function run_iwfm_list() {
