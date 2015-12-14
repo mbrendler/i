@@ -5,12 +5,13 @@ function doc_iwfm() {
 }
 
 function run_iwfm() {
-  local name=${2-}
+  local cmd=$1
+  shift
   log pushd "$PROJECTS_DIR/iwfm-wine"
-  case "$1" in
-    r*) run_iwfm_reset "$name" ;;
-    star*) run_iwfm_start "$name" ;;
-    sto*) run_iwfm_stop "$name" ;;
+  case "$cmd" in
+    r*) run_function_for_each_argument run_iwfm_reset "$@" ;;
+    star*) run_function_for_each_argument run_iwfm_start "$@" ;;
+    sto*) run_function_for_each_argument run_iwfm_stop "$@" ;;
     stat*) run_iwfm_status ;;
     li*) run_iwfm_list ;;
     lo*) run_iwfm_log "$name" ;;

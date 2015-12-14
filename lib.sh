@@ -14,6 +14,15 @@ function updown() {
   log "$@" && echo up || echo down
 }
 
+function run_function_for_each_argument() {
+  local function=$1
+  local arg
+  shift
+  for arg in "$@" ; do
+    "$function" "$arg"
+  done
+}
+
 function log() {
   log_message "$*"
   "$@" >> "$LOG_FILE" 2>&1
