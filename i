@@ -36,9 +36,9 @@ function main() {
 
   log_message '========================================'
   log_message run "$0 $*"
-  local cmd; cmd=$(get_completed_command "$1")
+  local cmd; cmd=$(get_completed_command "${1-help}")
   source "$COMMANDS_DIR/$cmd.sh"
-  shift
+  shift || true
   "run_$cmd" "$@"
 }
 
