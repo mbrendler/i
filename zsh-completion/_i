@@ -1,43 +1,35 @@
 #compdef i
 
-__all_features() {
-  _feature_names=( $(i list) )
-  compadd "$@" -k _feature_names
-}
-
-__all_iwfms() {
-  _iwfm=( $(i iwfm list) )
-  compadd "$@" -k _iwfm
-}
-
-if (( CURRENT > 2 )); then
-  (( CURRENT-- ))
-  shift words
-  local argument="$(i help | grep "^\s\s${words[1]}" | awk '{print $2}')"
-  if test "$argument" = 'FEATURE' || test "$argument" = '[FEATURE]' ; then
-    _arguments "*:feature_name:__all_features"
-  elif test "$argument" = 'CMD' ; then
-    if (( CURRENT > 2)) ; then
-      (( CURRENT-- ))
-      shift words
-      local argument="$(i ${words[0]} help | grep "^\s\s${words[1]}" | awk '{print $2}')"
-      _arguments "*:iwfm:__all_iwfms"
-    else
-      cmds=("${(@f)$(i ${words[1]} help | sed -nEe 's#^  ([^ ]*)[^-]*-- (.*)#\1[\2]#p')}")
-      _values "i command" $cmds
-    fi
+shift words
+local subcmds=()
+for w in $words ; do
+  local arg_type="$(i $subcmds help -a | awk "/^  $w/{print \$2}")"
+  if [ "$arg_type" != CMD ] ; then
+    break
   fi
+  local subcmds=( $w $subcmds )
+done
+
+if (( $#subcmds + 1 >= $#words )) ; then
+  if (( $#subcmds == $#words )) ; then
+    local subcmds=()
+  fi
+  local cmds=("${(@f)$(
+    i ${subcmds} help -a | sed -nEe 's#^  ([^ ]*)[^-]*-- (.*)#\1[\2]#p'
+  )}")
+  _values "i $subcmds command" $cmds
 else
-  cmds=("${(@f)$(i help | sed -nEe 's#^  ([^ ]*)[^-]*-- (.*)#\1[\2]#p')}")
-  _values "i command" $cmds
+  local current_argument_pos=$(( $CURRENT - $#subcmds - 1 ))
+  local last_command=$words[(( $#subcmds + 1 ))]
+  local argument_type=$(
+    i $subcmds help -a |
+    sed -nE "s/^  ($last_command.*[^ ]) +--.*$/\1/p" |
+    awk "{ \
+      if(NF <= $current_argument_pos) print tolower(\$NF) ; \
+      else print tolower(\$$current_argument_pos) \
+    }" |
+    tr _ - | tr -d \[ | tr -d \]
+  )
+  local completions=($(i ${subcmds} _list-${argument_type}s))
+  _describe "$argument_type" completions
 fi
-
-# Local Variables:
-# mode: Shell-Script
-# sh-indentation: 2
-# indent-tabs-mode: nil
-# sh-basic-offset: 2
-# End:
-# vim: ft=zsh sw=2 ts=2 et
-
-
