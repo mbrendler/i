@@ -5,10 +5,10 @@ source "$INSTALLED_HERE/../lib.sh"
 
 read_config
 
-function doc_list() {
-  echo "  list                     -- list installed features"
+function doc__list-features() {
+  echo "  _list-features           -- list installed features"
 }
 
-function run_list() {
+function run__list-features() {
   installed_features
 }

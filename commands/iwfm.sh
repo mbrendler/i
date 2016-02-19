@@ -14,8 +14,9 @@ function run_iwfm() {
     sto*) run_function_for_each_argument run_iwfm_stop "$@" ;;
     stat*) run_iwfm_status ;;
     li*) run_iwfm_list ;;
-    lo*) run_iwfm_log "$name" ;;
-    c*) run_iwfm_edit_config "$name" ;;
+    _list-iwfms) run_iwfm_list ;;
+    lo*) run_iwfm_log "$1" ;;
+    c*) run_iwfm_edit_config "$1" ;;
     *) run_iwfm_help ;;
   esac
   log popd
