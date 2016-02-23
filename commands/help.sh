@@ -7,10 +7,16 @@ function run_help() {
   local all=${1-}
   echo "$0 CMD [OPTIONS]"
   echo
+  help-for "$HERE/commands/"
+  help-for "$HOME/.i_commands/"
+}
+
+function help-for() {
+  local base=$1
   if test "$all" = '--all' -o "$all" = '-a' ; then
-    local match="$HERE/commands/*.sh"
+    local match="$base/*.sh"
   else
-    local match="$HERE/commands/[^_]*.sh"
+    local match="$base/[^_]*.sh"
   fi
   for command_script in $match ; do
     source "$command_script"
