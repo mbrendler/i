@@ -19,7 +19,9 @@ function help-for() {
     local match="$base/[^_]*.sh"
   fi
   for command_script in $match ; do
-    source "$command_script"
-    "doc_$(basename "${command_script%.*}")"
+    if test -f "$command_script" ; then
+      source "$command_script"
+      "doc_$(basename "${command_script%.*}")"
+    fi
   done
 }
