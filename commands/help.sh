@@ -5,7 +5,7 @@ function doc_help() {
 
 function run_help() {
   local all=${1-}
-  echo "$0 CMD [OPTIONS]"
+  echo "$0 CMD"
   echo
   help-for "$HERE/commands/"
   help-for "$HOME/.i_commands/"
