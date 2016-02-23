@@ -5,8 +5,8 @@ function doc_iwfm() {
 }
 
 function run_iwfm() {
-  local cmd=$1
-  shift
+  local cmd=${1-help}
+  shift || true
   log pushd "$PROJECTS_DIR/iwfm-wine"
   case "$cmd" in
     r*) run_function_for_each_argument run_iwfm_reset "$@" ;;
@@ -142,7 +142,7 @@ function iwfm_isps_cfg() {
 
 function run_iwfm_help() {
   cat <<EOF
-$0 iwfm CMD [OPTIONS]
+$0 iwfm CMD
 
   reset IWFM -- clear database and restart iWFM-wine iWFM
   start IWFM -- start iWFM-wine iWFM
