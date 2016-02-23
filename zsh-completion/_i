@@ -2,16 +2,23 @@
 
 shift words
 local subcmds=()
+local w
 for w in $words ; do
+  if [ "$x[1]" = '-' ] ; then
+    continue
+  fi
   local arg_type="$(i $subcmds help -a | awk "/^  $w/{print \$2}")"
   if [ "$arg_type" != CMD ] ; then
+    local last_command=$w
     break
   fi
   local subcmds=( $w $subcmds )
 done
 
-if (( $#subcmds + 1 >= $#words )) ; then
-  if (( $#subcmds == $#words )) ; then
+local options_count="$(echo " $words" | sed -E 's/ [^-][^ ]*//g' | wc -w)"
+
+if (( $#subcmds + 1 + $options_count >= $#words )) ; then
+  if (( $#subcmds + $options_count == $#words )) ; then
     local subcmds=()
   fi
   local cmds=("${(@f)$(
@@ -19,8 +26,7 @@ if (( $#subcmds + 1 >= $#words )) ; then
   )}")
   _values "i $subcmds command" $cmds
 else
-  local current_argument_pos=$(( $CURRENT - $#subcmds - 1 ))
-  local last_command=$words[(( $#subcmds + 1 ))]
+  local current_argument_pos=$(( $CURRENT - $#subcmds - $options_count - 1 ))
   local argument_type=$(
     i $subcmds help -a |
     sed -nE "s/^  ($last_command.*[^ ]) +--.*$/\1/p" |
@@ -30,6 +36,8 @@ else
     }" |
     tr _ - | tr -d \[ | tr -d \]
   )
-  local completions=($(i ${subcmds} _list-${argument_type}s))
-  _describe "$argument_type" completions
+  if [ -n "$argument_type" ] ; then
+    local completions=($(i ${subcmds} _list-${argument_type}s))
+    _describe "$argument_type" completions
+  fi
 fi
