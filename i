@@ -42,7 +42,7 @@ function main() {
   log_message '========================================'
   log_message run "$0 $*"
   local cmd_script
-  cmd_script="$(get-completed-command help-and-exit "${1-}" "$COMMANDS_DIR" "$LOCAL_COMMANDS_DIR")"
+  cmd_script="$(get-completed-command help-and-exit "${1-help}" "$COMMANDS_DIR" "$LOCAL_COMMANDS_DIR")"
   local cmd;cmd="$(basename "${cmd_script%.*}")"
   source "$cmd_script"
   shift || true
