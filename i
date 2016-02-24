@@ -30,11 +30,7 @@ function get-completed-command() {
     echo "${command_files[0]}"
   else
     >&2 echo "command '$cmd' is ambiguous:"
-    >&2 echo -n "  "
-    for command_file in "${command_files[@]}" ; do
-      >&2 echo -n " $(basename "${command_file%.*}")"
-    done
-    >&2 echo
+    echo ' ' "${command_files[@]}" | sed -E 's/[^ ]+\/([^\/ ]+).sh/\1/g' >&2
     exit 1
   fi
 }
