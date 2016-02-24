@@ -3,7 +3,7 @@ function doc_edit() {
   echo '  edit [FEATURE]           -- open editor in feature directory'
 }
 
-function run_edit() {
+function run--edit() {
   local feature ; feature="$(get_feature_name edit "${1-}")"
   local feature_dir="$PROJECTS_DIR/$feature"
   if test -n "$feature" ; then

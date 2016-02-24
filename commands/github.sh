@@ -3,7 +3,7 @@ function doc_github() {
   echo "  github [FEATURE] [ISSUE] -- open browser with feature on github"
 }
 
-function run_github() {
+function run--github() {
   local feature
   local issue
   if [[ "${1-}" =~ ^[0-9]+$ ]] ; then

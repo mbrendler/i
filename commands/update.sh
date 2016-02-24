@@ -73,7 +73,7 @@ function update_features() {
   done
 }
 
-function run_update() {
+function run--update() {
   if test $# -eq 0 || test -z "$1" ; then
     update_features
   else

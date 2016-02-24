@@ -3,7 +3,7 @@ function doc_cd() {
   echo '  cd FEATURE               -- switch to feature directory'
 }
 
-function run_cd() {
+function run--cd() {
   cat << EOF
 # To use this, add the following to your ~/.zshrc:
 

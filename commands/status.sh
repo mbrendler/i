@@ -4,7 +4,7 @@ function doc_status() {
   echo '  status                   -- show status information'
 }
 
-function run_status() {
+function run--status() {
   i iwfm status
   # TODO: add nginx
   # TODO: add forman

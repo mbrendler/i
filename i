@@ -13,9 +13,9 @@ readonly LOCAL_COMMANDS_DIR="$HOME/.i_commands"
 
 source "$HERE/lib.sh"
 
-function help-and-exit() {
-  source "$COMMANDS_DIR/help.sh"
-  >&2 run_help
+function action-and-exit() {
+  local action=$1
+  $action
   exit 1
 }
 
@@ -23,9 +23,14 @@ function get-completed-command() {
   local fail_action=$1
   local cmd=$2
   shift 2
-  local command_files=( $(eval "ls $(IFS=, ; echo "{$*}")/$cmd*.sh 2> /dev/null") )
+  if test "$#" -eq 1 ; then
+    local prefixes=$1
+  else
+    local prefixes;prefixes=$(IFS=, ; echo "{$*}")
+  fi
+  local command_files=( $(eval "ls $prefixes/$cmd*.sh 2> /dev/null") )
   if test -z "$cmd" || test "${#command_files}" -eq 0 ; then
-    $fail_action
+    >&2 action-and-exit "$fail_action"
   elif test ${#command_files[@]} -eq 1 ; then
     echo "${command_files[0]}"
   else
@@ -35,18 +40,31 @@ function get-completed-command() {
   fi
 }
 
+function run-completed-command() {
+  local prefix=$1
+  shift
+  local cmd_script
+  cmd_script="$(
+    get-completed-command \
+      "run-$prefix-help" \
+      "${1-help}" \
+      "$COMMANDS_DIR/$prefix" \
+      "$LOCAL_COMMANDS_DIR/$prefix"
+  )"
+  local cmd;cmd="$(basename "${cmd_script%.*}")"
+  shift || true
+  source "$cmd_script"
+  "run-$prefix-$cmd" "$@"
+}
+
 function main() {
   read_config
   log_clear
 
   log_message '========================================'
   log_message run "$0 $*"
-  local cmd_script
-  cmd_script="$(get-completed-command help-and-exit "${1-help}" "$COMMANDS_DIR" "$LOCAL_COMMANDS_DIR")"
-  local cmd;cmd="$(basename "${cmd_script%.*}")"
-  source "$cmd_script"
-  shift || true
-  "run_$cmd" "$@"
+  source "$COMMANDS_DIR/help.sh"
+  run-completed-command "" "$@"
 }
 
 main "$@"

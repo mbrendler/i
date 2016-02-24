@@ -3,7 +3,7 @@ function doc_help() {
   echo "  help                     -- show help overview"
 }
 
-function run_help() {
+function run--help() {
   local all=${1-}
   echo "$0 CMD"
   echo

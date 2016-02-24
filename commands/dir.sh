@@ -3,7 +3,7 @@ function doc_dir() {
   echo '  dir FEATURE              -- display path to feature'
 }
 
-function run_dir() {
+function run--dir() {
   local feature="$1"
   local feature_dir="$PROJECTS_DIR/$feature"
   if test -n "$feature" ; then

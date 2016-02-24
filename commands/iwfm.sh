@@ -4,7 +4,7 @@ function doc_iwfm() {
   echo '  iwfm CMD                 -- work with iWFM-wine'
 }
 
-function run_iwfm() {
+function run--iwfm() {
   local cmd=${1-help}
   shift || true
   log pushd "$PROJECTS_DIR/iwfm-wine"
