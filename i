@@ -6,31 +6,21 @@ if test "${DEBUG+x}" ; then
   set -x
 fi
 
-# because BSDs 'readlink' does not support '-f' option:
-readonly HERE="$(python -c "import os; print(os.path.dirname(os.path.realpath('$BASH_SOURCE')))")"
+readonly HERE="$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
 readonly COMMANDS_DIR="$HERE/commands"
 readonly LOCAL_COMMANDS_DIR="$HOME/.i_commands"
 
 source "$HERE/lib.sh"
 
-function action-and-exit() {
-  local action=$1
-  $action
-  exit 1
-}
-
 function get-completed-command() {
   local fail_action=$1
   local cmd=$2
   shift 2
-  if test "$#" -eq 1 ; then
-    local prefixes=$1
-  else
-    local prefixes;prefixes=$(IFS=, ; echo "{$*}")
-  fi
+  local prefixes;prefixes=$(IFS=, ; test "$#" -eq 1 && echo $1 || echo "{$*}")
   local command_files=( $(eval "ls $prefixes/$cmd*.sh 2> /dev/null") )
   if test -z "$cmd" || test "${#command_files}" -eq 0 ; then
-    >&2 action-and-exit "$fail_action"
+    >&2 $fail_action
+    exit 1
   elif test ${#command_files[@]} -eq 1 ; then
     echo "${command_files[0]}"
   else

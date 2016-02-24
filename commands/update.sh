@@ -1,8 +1,5 @@
 #! /bin/bash
 
-UPDATE_HERE="$(python -c "import os; print(os.path.dirname(os.path.realpath('$BASH_SOURCE')))")"
-source "$UPDATE_HERE/../lib.sh"
-
 read_config
 
 function doc_update() {
