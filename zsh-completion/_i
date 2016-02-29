@@ -3,8 +3,16 @@
 shift words
 local subcmds=()
 local w
+local continue_more=0
+local options_count=0
 for w in $words ; do
-  if [ "$x[1]" = '-' ] ; then
+  if [ "$continue_more" -gt 0 ] ; then
+    (( continue_more-- ))
+    continue
+  fi
+  if [ "$w[1]" = '-' ] ; then
+    continue_more=$(i $subcmds help | sed -nE "s/^  -$w[-1]([^-]*)--.*$/\1/p" | wc -w)
+    (( options_count += 1 + continue_more ))
     continue
   fi
   local arg_type="$(i $subcmds help -a | awk "/^  $w/{print \$2}")"
@@ -14,8 +22,6 @@ for w in $words ; do
   fi
   local subcmds=( $w $subcmds )
 done
-
-local options_count="$(echo " $words" | sed -E 's/ [^-][^ ]*//g' | wc -w)"
 
 if (( $#subcmds + 1 + $options_count >= $#words )) ; then
   if (( $#subcmds + $options_count == $#words )) ; then
