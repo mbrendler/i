@@ -67,7 +67,8 @@ if is-extra-command-installed crawl ; then
   run_completion 3 i c '' | assert-empty
   run_completion 3 i crawl '' | assert -s -l -r -c -u -p session-token \
                                        tenants iwfm-versions query run
-  # TODO: run_completion 3 i crawl -
+  run_completion 3 i crawl - | assert -s -l -r -c -u -p session-token \
+                                      tenants iwfm-versions query run
   run_completion 4 i crawl -l '' | assert -s -l -r -c -u -p session-token \
                                           tenants iwfm-versions query run
   run_completion 4 i crawl -u '' | assert-empty
