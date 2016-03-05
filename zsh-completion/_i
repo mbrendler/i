@@ -44,7 +44,7 @@ else
     if [ "$argument_type" = file ] ; then
       _files
     elif [ -n "$argument_type" ] ; then
-      local completions=($(${subcmds} _list-${argument_type}s))
+      local completions=($(${subcmds} _list-${argument_type}s 2> /dev/null))
       _describe "$argument_type" completions
     fi
   fi
