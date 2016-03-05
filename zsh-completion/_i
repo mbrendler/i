@@ -1,29 +1,34 @@
 #compdef i
 
 shift words
+(( CURRENT-- ))
 local subcmds=()
-local w
+local i
 local continue_more=0
 local options_count=0
-for w in $words ; do
-  if [ "$continue_more" -gt 0 ] ; then
-    (( continue_more-- ))
-    continue
-  fi
-  if [ "$w[1]" = '-' ] ; then
-    continue_more=$(i $subcmds help | sed -nE "s/^  -$w[-1]([^-]*)--.*$/\1/p" | wc -w)
-    (( options_count += 1 + continue_more ))
-    continue
-  fi
-  local arg_type="$(i $subcmds help -a | awk "/^  $w/{print \$2}")"
-  if [ "$arg_type" != CMD ] ; then
-    local last_command=$w
-    break
-  fi
-  local subcmds=( $w $subcmds )
-done
 
-if (( $#subcmds + 1 + $options_count >= $#words )) ; then
+if [ "$CURRENT" -gt 1 ] ; then
+  for i in {1..$(( CURRENT - 1 ))} ; do
+    local w=$words[$i]
+    if [ "$continue_more" -gt 0 ] ; then
+      (( continue_more-- ))
+      continue
+    fi
+    if [ "$w[1]" = '-' ] ; then
+      continue_more=$(i $subcmds help | sed -nE "s/^  -$w[-1]([^-]*)--.*$/\1/p" | wc -w)
+      (( options_count += 1 + continue_more ))
+      continue
+    fi
+    local arg_type="$(i $subcmds help -a | awk "/^  $w/{print \$2}")"
+    if [ "$arg_type" != CMD ] ; then
+      local last_command=$w
+      break
+    fi
+    local subcmds=( $w $subcmds )
+  done
+fi
+
+if (( $#subcmds + 1 + $options_count >= $CURRENT )) ; then
   if (( $#subcmds + $options_count == $#words )) ; then
     local subcmds=()
   fi
@@ -32,7 +37,7 @@ if (( $#subcmds + 1 + $options_count >= $#words )) ; then
   )}")
   _values "i $subcmds command" $cmds
 else
-  local current_argument_pos=$(( $CURRENT - $#subcmds - $options_count - 1 ))
+  local current_argument_pos=$(( $CURRENT - $#subcmds - $options_count ))
   local argument_type=$(
     i $subcmds help -a |
     sed -nE "s/^  ($last_command.*[^ ]) +--.*$/\1/p" |
