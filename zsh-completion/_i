@@ -12,6 +12,7 @@ while (( ++i < CURRENT )); do
         sed -nE "s/^  -$w[-1]([^-]*)--.*$/\1/p" | \
         wc -w)
     (( i += option_arg_count ))
+    test $i -ge $CURRENT && return # current is option-argument
     (( current -= 1 + option_arg_count ))
     continue
   fi
