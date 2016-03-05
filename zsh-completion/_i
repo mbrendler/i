@@ -39,10 +39,12 @@ else
       }" |
       tr _ - | tr -d \[ | tr -d \]
   )
-  if [ "$argument_type" = file ] ; then
-    _files
-  elif [ -n "$argument_type" ] ; then
-    local completions=($(${subcmds} _list-${argument_type}s))
-    _describe "$argument_type" completions
+  if [ "$(echo "$argument_type" | wc -l)" = 1 ] ; then
+    if [ "$argument_type" = file ] ; then
+      _files
+    elif [ -n "$argument_type" ] ; then
+      local completions=($(${subcmds} _list-${argument_type}s))
+      _describe "$argument_type" completions
+    fi
   fi
 fi
