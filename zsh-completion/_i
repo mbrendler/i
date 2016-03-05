@@ -1,56 +1,48 @@
 #compdef i
 
-shift words
-(( CURRENT-- ))
-local subcmds=()
-local i
-local continue_more=0
-local options_count=0
+local subcmds=(i)
+local current=$CURRENT
+local i=1
 
-if [ "$CURRENT" -gt 1 ] ; then
-  for i in {1..$(( CURRENT - 1 ))} ; do
-    local w=$words[$i]
-    if [ "$continue_more" -gt 0 ] ; then
-      (( continue_more-- ))
-      continue
-    fi
-    if [ "$w[1]" = '-' ] ; then
-      continue_more=$(i $subcmds help | sed -nE "s/^  -$w[-1]([^-]*)--.*$/\1/p" | wc -w)
-      (( options_count += 1 + continue_more ))
-      continue
-    fi
-    local arg_type="$(i $subcmds help -a | awk "/^  $w/{print \$2}")"
-    if [ "$arg_type" != CMD ] ; then
-      local last_command=$w
-      break
-    fi
-    local subcmds=( $w $subcmds )
-  done
-fi
-
-if (( $#subcmds + 1 + $options_count >= $CURRENT )) ; then
-  if (( $#subcmds + $options_count == $#words )) ; then
-    local subcmds=()
+while (( ++i < CURRENT )); do
+  local w=$words[$i]
+  if [ "$w[1]" = '-' ] ; then
+    local option_arg_count=$(
+      $subcmds help | \
+        sed -nE "s/^  -$w[-1]([^-]*)--.*$/\1/p" | \
+        wc -w)
+    (( i += option_arg_count ))
+    (( current -= 1 + option_arg_count ))
+    continue
   fi
+  local arg_type="$($subcmds help -a | awk "/^  $w/{print \$2}")"
+  if [ "$arg_type" != CMD ] ; then
+    local last_command=$w
+    break
+  fi
+  subcmds+=($w)
+done
+
+if (( $#subcmds + 1 >= $current )) ; then
   local cmds=("${(@f)$(
-    i ${subcmds} help -a | sed -nEe 's#^  ([^ ]*)[^-]*-- (.*)#\1[\2]#p'
+    ${subcmds} help -a | sed -nEe 's#^  ([^ ]*)[^-]*-- (.*)#\1[\2]#p'
   )}")
-  _values "i $subcmds command" $cmds
+  _values "$subcmds command" $cmds
 else
-  local current_argument_pos=$(( $CURRENT - $#subcmds - $options_count ))
+  local current_argument_pos=$(( $current - $#subcmds ))
   local argument_type=$(
-    i $subcmds help -a |
-    sed -nE "s/^  ($last_command.*[^ ]) +--.*$/\1/p" |
-    awk "{ \
-      if(NF <= $current_argument_pos) print tolower(\$NF) ; \
-      else print tolower(\$$current_argument_pos) \
-    }" |
-    tr _ - | tr -d \[ | tr -d \]
+    $subcmds help -a |
+      sed -nE "s/^  ($last_command.* [^ ]+) +--.*$/\1/p" |
+      awk "{ \
+        if(NF <= $current_argument_pos) print tolower(\$NF) ; \
+        else print tolower(\$$current_argument_pos) \
+      }" |
+      tr _ - | tr -d \[ | tr -d \]
   )
   if [ "$argument_type" = file ] ; then
     _files
   elif [ -n "$argument_type" ] ; then
-    local completions=($(i ${subcmds} _list-${argument_type}s))
+    local completions=($(${subcmds} _list-${argument_type}s))
     _describe "$argument_type" completions
   fi
 fi
