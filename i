@@ -16,16 +16,15 @@ function get-completed-command() {
   local fail_action=$1
   local cmd=$2
   shift 2
-  local prefixes;prefixes=$(IFS=, ; test "$#" -eq 1 && echo $1 || echo "{$*}")
-  local command_files=( $(eval "ls $prefixes/$cmd*.sh 2> /dev/null") )
-  if test -z "$cmd" || test "${#command_files}" -eq 0 ; then
+  local command_files=( $(find "$@" -depth 1 -name "$cmd"\*.sh 2> /dev/null) )
+  if test ${#command_files[@]} -eq 1 ; then
+    echo "${command_files[0]}"
+  elif test -z "$cmd" || test "${#command_files}" -eq 0 ; then
     >&2 $fail_action
     exit 1
-  elif test ${#command_files[@]} -eq 1 ; then
-    echo "${command_files[0]}"
   else
     >&2 echo "command '$cmd' is ambiguous:"
-    echo ' ' "${command_files[@]}" | sed -E 's/[^ ]+\/([^\/ ]+).sh/\1/g' >&2
+    echo ' ' "${command_files[@]##*/}" | sed 's/\.sh//g' >&2
     exit 1
   fi
 }
