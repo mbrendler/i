@@ -1,6 +1,6 @@
 
-function doc_github() {
-  echo "  github [FEATURE] [ISSUE] -- open browser with feature on github"
+function doc--github() {
+  echo 'github [FEATURE] [ISSUE] -- open browser with feature on github'
 }
 
 function run--github() {

@@ -1,7 +1,7 @@
 #! /bin/bash
 
-function doc__list-features() {
-  echo "  _list-features           -- list installed features"
+function doc--_list-features() {
+  echo '_list_features -- list installed features'
 }
 
 function run--_list-features() {

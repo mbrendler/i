@@ -2,8 +2,8 @@
 
 read_config
 
-function doc_update() {
-  echo "  update [FEATURE]         -- update project"
+function doc--update() {
+  echo 'update [FEATURE] -- update project'
 }
 
 function update_post_pull() {

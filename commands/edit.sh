@@ -1,6 +1,6 @@
 
-function doc_edit() {
-  echo '  edit [FEATURE]           -- open editor in feature directory'
+function doc--edit() {
+  echo 'edit [FEATURE] -- open editor in feature directory'
 }
 
 function run--edit() {
