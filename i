@@ -14,6 +14,7 @@ readonly LOCAL_COMMANDS_DIR="$I_ROOT/commands"
 source "$HERE/lib.sh"
 
 function main() {
+  mkdir -p "$I_ROOT"
   read_config
   log_clear
 
