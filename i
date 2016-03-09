@@ -7,8 +7,9 @@ if test "${DEBUG+x}" ; then
 fi
 
 readonly HERE="$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
+readonly I_ROOT="$HOME/.i"
 readonly COMMANDS_DIR="$HERE/commands"
-readonly LOCAL_COMMANDS_DIR="$HOME/.i/commands"
+readonly LOCAL_COMMANDS_DIR="$I_ROOT/commands"
 
 source "$HERE/lib.sh"
 

@@ -1,10 +1,10 @@
 
 function read_config() {
-  I_CONFIG_FILE=${I_CONFIG_FILE-"$HOME/.i/init.sh"}
+  I_CONFIG_FILE=${I_CONFIG_FILE-"$I_ROOT/init.sh"}
   test -f "$I_CONFIG_FILE" && source "$I_CONFIG_FILE"
 
   PROJECTS_DIR=${PROJECTS_DIR-"$HOME/work"}
-  LOG_FILE=${LOG_FILE-"$HOME/.i/log"}
+  LOG_FILE=${LOG_FILE-"$I_ROOT/log"}
   I_EDITOR=${I_EDITOR-${EDITOR-vim}}
   I_LOG_CMD=${I_LOG_CMD-"less +F"}
   I_GITHUB_BASE_URL=$I_GITHUB_BASE_URL
