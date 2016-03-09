@@ -6,7 +6,12 @@ if test "${DEBUG+x}" ; then
   set -x
 fi
 
-readonly HERE="$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
+function readlink-m() {
+  # BSDs readlink does not support -m option:
+  python -c "import os ; print(os.path.realpath('$1'))"
+}
+
+readonly HERE="$(dirname "$(readlink-m "${BASH_SOURCE[0]}")")"
 readonly I_ROOT="$HOME/.i"
 readonly COMMANDS_DIR="$HERE/commands"
 readonly LOCAL_COMMANDS_DIR="$I_ROOT/commands"
