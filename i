@@ -12,7 +12,8 @@ function readlink-m() {
 }
 
 readonly HERE="$(dirname "$(readlink-m "${BASH_SOURCE[0]}")")"
-readonly I_ROOT="$HOME/.i"
+readonly I_ENVIRONMENT="${I_ENVIRONMENT:-$(basename "$0")}"
+readonly I_ROOT="$HOME/.$I_ENVIRONMENT"
 readonly COMMANDS_DIR="$HERE/commands"
 readonly LOCAL_COMMANDS_DIR="$I_ROOT/commands"
 
