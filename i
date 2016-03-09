@@ -8,7 +8,7 @@ fi
 
 readonly HERE="$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
 readonly COMMANDS_DIR="$HERE/commands"
-readonly LOCAL_COMMANDS_DIR="$HOME/.i_commands"
+readonly LOCAL_COMMANDS_DIR="$HOME/.i/commands"
 
 source "$HERE/lib.sh"
 

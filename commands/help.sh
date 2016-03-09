@@ -7,8 +7,8 @@ function run--help() {
   local all=
   test "${1-}" = '-a' && local all=all
   printf "%s CMD\n\n" "$0"
-  help-for "$HERE/commands/" "$all" | help-prettify
-  help-for "$HOME/.i_commands/" "$all" | help-prettify
+  help-for "$COMMANDS_DIR" "$all" | help-prettify
+  help-for "$LOCAL_COMMANDS_DIR" "$all" | help-prettify
 }
 
 function help-for() {
