@@ -12,17 +12,13 @@ function run--status() {
    status-simple postgres ;
    status-simple redis) | \
      status-add-heading process,status | \
-     status-pretty '"%10s - %6s\n", $1, $2'
+     pretty '"%10s - %6s\n", $1, $2'
 
   echo
   status-feature-ports | \
     status-feature-insert-status | \
     status-add-heading feature,status,port| \
-    status-pretty '"%18s - %6s %5s\n", $1, $2, $3'
-}
-
-function status-pretty() {
-  awk -F, "{ printf($1) }"
+    pretty '"%18s - %6s %5s\n", $1, $2, $3'
 }
 
 function status-add-heading() {

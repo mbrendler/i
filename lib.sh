@@ -10,6 +10,10 @@ function read_config() {
   I_GITHUB_BASE_URL=$I_GITHUB_BASE_URL
 }
 
+function pretty() {
+  awk -F, "{ printf($1) }"
+}
+
 function updown() {
   log "$@" && echo up || echo down
 }
