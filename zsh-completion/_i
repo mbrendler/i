@@ -32,7 +32,7 @@ if (( $#subcmds + 1 >= $current )) ; then
 else
   local current_argument_pos=$(( $current - $#subcmds ))
   local argument_type=$(
-    $subcmds help -a |
+    $subcmds help -a 2> /dev/null |
       sed -nE "s/^  ($last_command.* [^ ]+) +--.*$/\1/p" |
       awk "{ \
         if(NF <= $current_argument_pos) print tolower(\$NF) ; \
