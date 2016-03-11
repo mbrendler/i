@@ -77,16 +77,14 @@ function run-completed-command() {
 }
 
 function installed_features() {
-  for feature_dir in "$PROJECTS_DIR"/* ; do
-    if test -d "$feature_dir/.git" ; then
-      basename "$feature_dir"
-    fi
+  for feature_dir in "$PROJECTS_DIR"/*/.git/ ; do
+    basename "${feature_dir%%/.*}"
   done
 }
 
 function get_feature_name_from_path() {
-  local path="$1"
-  echo "$path" | sed -ne "s#^$PROJECTS_DIR/\\([^/]*\\).*\$#\\1#p"
+  local path_in_project="${1##$PROJECTS_DIR/}" >&2
+  echo "${path_in_project%%/*}"
 }
 
 function get_feature_name() {
