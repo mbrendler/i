@@ -44,6 +44,12 @@ else
   if [ "$#argument_type" = 1 ] ; then
     if [ "$argument_type" = file ] ; then
       _files
+    elif [[ $argument_type =~ ^cmd-args- ]] ; then
+      local shell_cmd="${argument_type#cmd-args-}"
+      shift words (( i - 1 ))
+      (( CURRENT -= i - 2 ))
+      words[1]=$shell_cmd
+      _normal
     elif [ -n "$argument_type" ] ; then
       local completions=($(${subcmds} _list-${argument_type}s 2> /dev/null))
       _describe "$argument_type" completions
