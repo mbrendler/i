@@ -1,27 +1,28 @@
-#compdef i
+#compdef i p
 
 local subcmds=( $words[1] )
 local current=$CURRENT
 local i=1
+local last_command=
 
 while (( ++i < CURRENT )); do
   local w=$words[$i]
   if [ "$w[1]" = '-' ] ; then
-    local option_arg_count=$(
-      $subcmds help | \
-        sed -nE "s/^  -$w[-1]([^-]*)--.*$/\1/p" | \
-        wc -w)
-    (( i += option_arg_count ))
+    local option_args=($(
+      $subcmds help "$last_command" | sed -nE "s/^  -$w[-1]([^-]*)--.*$/\1/p"
+    ))
+    (( i += $#option_args ))
     test $i -ge $CURRENT && return # current is option-argument
-    (( current -= 1 + option_arg_count ))
-    continue
+    (( current -= 1 + $#option_args ))
+  else
+    test -n "$last_command" && break
+    local arg_type="$($subcmds help -a | awk "/^  $w/{print \$2}")"
+    if [ "$arg_type" != CMD ] ; then
+      local last_command=$w
+    else
+      subcmds+=($w)
+    fi
   fi
-  local arg_type="$($subcmds help -a | awk "/^  $w/{print \$2}")"
-  if [ "$arg_type" != CMD ] ; then
-    local last_command=$w
-    break
-  fi
-  subcmds+=($w)
 done
 
 if (( $#subcmds + 1 >= $current )) ; then
@@ -31,7 +32,7 @@ if (( $#subcmds + 1 >= $current )) ; then
   _values "$subcmds command" $cmds
 else
   local current_argument_pos=$(( $current - $#subcmds ))
-  local argument_type=$(
+  local argument_type=($(
     $subcmds help -a 2> /dev/null |
       sed -nE "s/^  ($last_command.* [^ ]+) +--.*$/\1/p" |
       awk "{ \
@@ -39,8 +40,8 @@ else
         else print tolower(\$$current_argument_pos) \
       }" |
       tr _ - | tr -d \[ | tr -d \]
-  )
-  if [ "$(echo "$argument_type" | wc -l)" = 1 ] ; then
+  ))
+  if [ "$#argument_type" = 1 ] ; then
     if [ "$argument_type" = file ] ; then
       _files
     elif [ -n "$argument_type" ] ; then
