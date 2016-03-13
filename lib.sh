@@ -73,12 +73,12 @@ function get-completed-command() {
 function run-completed-command() {
   local prefix=$1
   shift
+  local prefix_command_dirs=( ${command_dirs[@]/%//$prefix} )
   local cmd_script;cmd_script="$(
     get-completed-command \
       "run-$prefix-help" \
       "${1-help}" \
-      "$COMMANDS_DIR/$prefix" \
-      "$LOCAL_COMMANDS_DIR/$prefix"
+      "${prefix_command_dirs[@]}"
   )"
   local cmd;cmd="$(basename "${cmd_script%.*}")"
   shift || true
