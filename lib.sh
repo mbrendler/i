@@ -54,16 +54,12 @@ function log_clear() {
 }
 
 function get-completed-command() {
-  local fail_action=$1
-  local cmd=$2
-  shift 2
+  local cmd=$1
+  shift
   local command_files=( $(find "$@" -depth 1 -name "$cmd"\*.sh 2> /dev/null) )
-  if test ${#command_files[@]} -eq 1 ; then
+  if [ ${#command_files[@]} -eq 1 ] ; then
     echo "${command_files[0]}"
-  elif test -z "$cmd" || test "${#command_files}" -eq 0 ; then
-    >&2 $fail_action
-    exit 1
-  else
+  elif [ ${#command_files[@]} -gt 1 ] ; then
     >&2 echo "command '$cmd' is ambiguous:"
     echo ' ' "${command_files[@]##*/}" | sed 's/\.sh//g' >&2
     exit 1
@@ -76,15 +72,81 @@ function run-completed-command() {
   local prefix_command_dirs=( ${command_dirs[@]/%//$prefix} )
   local cmd_script;cmd_script="$(
     get-completed-command \
-      "run-$prefix-help" \
       "${1-help}" \
       "${prefix_command_dirs[@]}"
   )"
+  if [ -z "$cmd_script" ] ; then
+    >&2 help "$prefix"
+    exit 1
+  fi
   local cmd;cmd="$(basename "${cmd_script%.*}")"
   shift || true
   source "$cmd_script"
   "run-$prefix-$cmd" "$@"
 }
+
+# -----------------------------------------------------------------------------
+
+function help() {
+  local prefix="$1"
+  shift
+  local all=
+  if [ "${1-}" = '-a' ] ; then
+    local all=all
+    shift
+  fi
+
+  if [ "$#" -gt 0 ] ; then
+    local prefix_command_dirs=( ${command_dirs[@]/%//$prefix} )
+    local command_files;command_files=(
+      $(find "${prefix_command_dirs[@]}" -depth 1 -name "$1"\*.sh 2> /dev/null || true)
+    )
+    if [ "${#command_files[@]}" -eq 1 ] ; then
+      source "$command_files"
+      echo "$0 $prefix $("doc-$prefix-$1")"
+      echo
+      "doc-$prefix-$1-options" | help-prettify
+      exit 0
+    fi
+  fi
+
+  local opts_doc;opts_doc=$("doc-$prefix-options" 2> /dev/null || echo "")
+  if [ -n "$opts_doc" ] ; then
+    printf "%s $prefix [OPTIONS] [CMD]\n\n" "$0"
+    help-prettify <<< "$opts_doc"
+    echo
+  else
+    printf "%s $prefix [CMD]\n\n" "$0"
+  fi
+  (for command_dir in "${command_dirs[@]}" ; do
+    help-for "$prefix" "$command_dir/$prefix" "$all"
+  done) | help-prettify
+}
+
+function help-for() {
+  local prefix=$1
+  local base=$2
+  local all=${3-}
+  if test "$all" = all ; then
+    local match="$base/*.sh"
+  else
+    local match="$base/[^_]*.sh"
+  fi
+  for command_script in $match ; do
+    test ! -f "$command_script" && continue
+    source "$command_script"
+    local cmd;cmd="$(basename "${command_script%.*}")"
+    "doc-$prefix-$cmd"
+  done
+}
+
+function help-prettify() {
+  local raw;raw="$(cat)"
+  local width;width="$(sed -E 's/^ *([^ ].*[^ ]) *--.*$/\1/g' <<< "$raw" | wc -L)"
+  awk -F ' -- ' "{ printf(\"  %-${width}s -- %s\n\", \$1, \$2) }" <<< "$raw"
+}
+
+# -----------------------------------------------------------------------------
 
 function installed_features() {
   for feature_dir in "$PROJECTS_DIR"/*/.git/ ; do

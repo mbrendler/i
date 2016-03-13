@@ -29,7 +29,6 @@ function main() {
 
   log_message '========================================'
   log_message run "$0 $*"
-  source "$COMMANDS_DIR/help.sh"
   run-completed-command "" "$@"
 }
 
