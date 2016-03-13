@@ -35,6 +35,16 @@ function log() {
   return $result
 }
 
+function log2() {
+  log_message "$*"
+  "$@" 2>> /dev/null
+  # TODO synchronize output
+  # "$LOG_FILE"
+  local result=$?
+  # echo result: $result >> "$LOG_FILE"
+  return $result
+}
+
 function log_message() {
   echo "$(date): $*" >> "$LOG_FILE"
 }
