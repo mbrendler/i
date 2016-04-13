@@ -22,6 +22,10 @@ _files() {
   echo ' ---files--- '
 }
 
+_normal() {
+  echo ' ---normal--- $CURRENT $words'
+}
+
 assert() {
   local content="$(cat)"
   for x in $@ ; do
@@ -56,6 +60,7 @@ run_completion 2 i i | assert cd github help iwfm
 run_completion 3 i iwfm '' | assert reset start stop status help
 run_completion 3 i status '' | assert-empty
 run_completion 3 i st '' | assert-empty
+run_completion 4 i run hehe gi | assert git
 
 if is-extra-command-installed build ; then
   run_completion 2 i b | assert build cd github help iwfm

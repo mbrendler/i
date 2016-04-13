@@ -44,6 +44,11 @@ else
   if [ "$#argument_type" = 1 ] ; then
     if [ "$argument_type" = file ] ; then
       _files
+    elif [ "$argument_type" = shell-cmd ] ; then
+      local PWD="$($words[1] dir $words[$i])"
+      local words=( ${words:$i} )
+      (( CURRENT -= i ))
+      _normal
     elif [[ $argument_type =~ ^cmd-args- ]] ; then
       local shell_cmd="${argument_type#cmd-args-}"
       shift words (( i - 1 ))
