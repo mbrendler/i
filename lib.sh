@@ -127,7 +127,7 @@ function help() {
       source "$command_files"
       echo "$0 $prefix $("doc-$prefix-$1")"
       echo
-      "doc-$prefix-$1-options" | help-prettify
+      ("doc-$prefix-$1-options" 2> /dev/null || true) | help-prettify
       exit 0
     fi
   fi
