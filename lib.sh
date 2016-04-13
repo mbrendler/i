@@ -53,6 +53,12 @@ function log_clear() {
   rm -f "$LOG_FILE"
 }
 
+function wait-for-subprocesses() {
+  for job in $(jobs -p) ; do
+    wait "$job"
+  done
+}
+
 function get-completed-command() {
   local cmd=$1
   shift
