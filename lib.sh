@@ -53,6 +53,22 @@ function log_clear() {
   rm -f "$LOG_FILE"
 }
 
+function i-view(){
+  if [ -t 1 ] ; then
+    view "$@"
+  else
+    cat "$@"
+  fi
+}
+
+function i-edit(){
+  if [ -t 1 ] ; then
+    "$I_EDITOR" "$@"
+  else
+    cat "$@"
+  fi
+}
+
 function wait-for-subprocesses() {
   for job in $(jobs -p) ; do
     wait "$job"
