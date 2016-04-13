@@ -10,9 +10,9 @@ function run--iwfm() {
   log pushd "$PROJECTS_DIR/iwfm-wine"
   case "$cmd" in
     r*) run_function_for_each_argument run_iwfm_reset "$@" ;;
-    star*) run_function_for_each_argument run_iwfm_start "$@" ;;
-    sto*) run_function_for_each_argument run_iwfm_stop "$@" ;;
-    stat*) run_iwfm_status ;;
+    u*) run_function_for_each_argument run_iwfm_start "$@" ;;
+    d*) run_function_for_each_argument run_iwfm_stop "$@" ;;
+    s*) run_iwfm_status ;;
     li*) run_iwfm_list ;;
     _list-iwfms) run_iwfm_list ;;
     lo*) run_iwfm_log "$1" ;;
@@ -145,8 +145,8 @@ function run_iwfm_help() {
 $0 iwfm CMD
 
   reset IWFM -- clear database and restart iWFM-wine iWFM
-  start IWFM -- start iWFM-wine iWFM
-  stop IWFM  -- stop iWFM-wine iWFM
+  up IWFM    -- start iWFM-wine iWFM
+  down IWFM  -- stop iWFM-wine iWFM
   status     -- status of all iWFM-wine iWFMs
   list       -- list iWFM-wine iWFMs
   log IWFM   -- display iWFM logfile
