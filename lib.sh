@@ -54,7 +54,7 @@ function log_clear() {
   rm -f "$LOG_FILE"
 }
 
-function i-view(){
+function i-view() {
   if [ -t 1 ] ; then
     view "$@"
   else
@@ -62,7 +62,7 @@ function i-view(){
   fi
 }
 
-function i-edit(){
+function i-edit() {
   if [ -t 1 ] ; then
     "$I_EDITOR" "$@"
   else
