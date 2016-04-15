@@ -14,12 +14,8 @@ function run--github() {
     issue="${2-}"
   fi
   if test -n "$feature" ; then
-    if test -n "$issue" ; then
-      open -g "$I_GITHUB_BASE_URL/$feature/issues/$issue"
-    else
-      open -g "$I_GITHUB_BASE_URL/$feature"
-    fi
-    sleep 0.1
-    log osascript "$HERE/go_to_window.scpt"
+    local url="$I_GITHUB_BASE_URL/$feature"
+    test -n "$issue" && url="$url/issues/$issue"
+    i-browser "$url"
   fi
 }

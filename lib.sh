@@ -70,6 +70,11 @@ function i-edit() {
   fi
 }
 
+function i-browser() {
+  open -g "$@"
+  log osascript "$HERE/go_to_window.scpt"
+}
+
 function wait-for-subprocesses() {
   for job in $(jobs -p) ; do
     wait "$job"
