@@ -85,20 +85,18 @@ function complete-by-list() {
   local name=$1
   local list=$2
   local uncompleted=$3
-
-  local completed;completed="$(grep -iE "$uncompleted" <<<"$list")"
-  case "$(wc -l <<<"$completed")" in
-    1) echo "$completed" ;;
-    0)
-      >&2 echo "no $name found for: '${uncompleted##^}'"
-      exit 1
-    ;;
-    *)
-      >&2 echo "$name '${uncompleted##^}' is ambiguous:"
-      >&2 sed -E 's/^/  /' <<<"$completed"
-      exit 1
-    ;;
-  esac
+  local completed;completed="$(grep -i "$uncompleted" <<<"$list")"
+  local count;count="$(wc -l <<<"$completed")"
+  if [ "$count" = 1 ] && [ -n "$completed" ]; then
+    echo "$completed"
+  elif [ -z "$completed" ] ; then
+    >&2 echo "no $name found for: '${uncompleted##^}'"
+    exit 1
+  else
+    >&2 echo "$name '${uncompleted##^}' is ambiguous:"
+    >&2 sed -E 's/^/  /' <<<"$completed"
+    exit 1
+  fi
 }
 
 function get-completed-command() {
