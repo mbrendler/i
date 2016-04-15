@@ -76,6 +76,26 @@ function wait-for-subprocesses() {
   done
 }
 
+function complete-by-list() {
+  local name=$1
+  local list=$2
+  local uncompleted=$3
+
+  local completed;completed="$(grep -iE "$uncompleted" <<<"$list")"
+  case "$(wc -l <<<"$completed")" in
+    1) echo "$completed" ;;
+    0)
+      >&2 echo "no $name found for: '$uncompleted'"
+      exit 1
+    ;;
+    *)
+      >&2 echo "$name '$uncompleted' is ambiguous:"
+      >&2 sed -E 's/^/  /' <<<"$completed"
+      exit 1
+    ;;
+  esac
+}
+
 function get-completed-command() {
   local cmd=$1
   shift
