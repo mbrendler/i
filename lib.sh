@@ -90,11 +90,11 @@ function complete-by-list() {
   case "$(wc -l <<<"$completed")" in
     1) echo "$completed" ;;
     0)
-      >&2 echo "no $name found for: '$uncompleted'"
+      >&2 echo "no $name found for: '${uncompleted##^}'"
       exit 1
     ;;
     *)
-      >&2 echo "$name '$uncompleted' is ambiguous:"
+      >&2 echo "$name '${uncompleted##^}' is ambiguous:"
       >&2 sed -E 's/^/  /' <<<"$completed"
       exit 1
     ;;
