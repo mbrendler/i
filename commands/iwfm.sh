@@ -122,7 +122,7 @@ function run_iwfm_list() {
 }
 
 function run_iwfm_log() {
-  $I_LOG_CMD "$(iwfm_log_file iescon "$1")"
+  i-view "$(iwfm_log_file iescon "$1")"
 }
 
 function run_iwfm_edit_config() {
