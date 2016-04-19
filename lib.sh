@@ -1,3 +1,4 @@
+#! /bin/bash
 
 function read_config() {
   I_CONFIG_FILE=${I_CONFIG_FILE-"$I_ROOT/init.sh"}
@@ -72,7 +73,7 @@ function i-edit() {
 
 function i-browser() {
   open -g "$@"
-  log osascript "$HERE/go_to_window.scpt"
+  log osascript <<<'tell application "Safari" to activate'
 }
 
 function wait-for-subprocesses() {
