@@ -57,7 +57,7 @@ function log_clear() {
 
 function i-view() {
   if [ -t 1 ] ; then
-    view "$@"
+    vim -R "$@"
   else
     cat "$@"
   fi
