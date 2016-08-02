@@ -51,19 +51,19 @@ is-extra-command-installed() {
   i help | grep "^  $1" > /dev/null
 }
 
-run_completion 2 i | assert cd github help iwfm
-run_completion 2 i '' | assert cd github help iwfm
-run_completion 2 i c | assert cd github help iwfm
-run_completion 2 i c hallo | assert cd github help iwfm
-run_completion 3 i cd '' | assert Me iwfm-api iwfm-ruby iwfm-test iwfm
-run_completion 2 i i | assert cd github help iwfm
-run_completion 3 i iwfm '' | assert reset start stop status help
+run_completion 2 i | assert cd github help
+run_completion 2 i '' | assert cd github help
+run_completion 2 i c | assert cd github help
+run_completion 2 i c hallo | assert cd github help
+run_completion 3 i cd '' | assert iwfm-api iwfm-ruby iwfm-test iwfm
+run_completion 2 i i | assert cd github help
 run_completion 3 i status '' | assert-empty
 run_completion 3 i st '' | assert-empty
-run_completion 4 i run hehe gi | assert git
+# run_completion 4 i run iwfm gi | assert git
 
 if is-extra-command-installed build ; then
-  run_completion 2 i b | assert build cd github help iwfm
+  run_completion 2 i b | assert build cd github help
+  run_completion 3 i build '' | assert help get last-log
   run_completion 4 i build fail '' | assert frankenstein injixo opti xlink
   run_completion 5 i build fail frank '' | assert ies.log security.log
   run_completion 5 i build last-log -t '' | assert frankenstein injixo opti
