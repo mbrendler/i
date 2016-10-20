@@ -11,7 +11,7 @@ function run--pomodoro() {
   case "${1-}" in
     h*) pomodoro-stop ;;
     u*) pomodoro-start "${2-$I_POMODORO_DEFAULT_MINUTES}";;
-    *) pomodoro-status ;;
+    *) pomodoro-status "${2-}";;
   esac
 }
 
@@ -33,13 +33,22 @@ function pomodoro-stop() {
 function pomodoro-status() {
   if pomodoro-is-running ; then
     local seconds;seconds="$(pomodoro-current-time)"
-    local s;s=$((-1 * seconds))
-    while ((s >= 60)) ; do
-      s=$((s - 60))
-    done
-    echo pomodoro time: "$((-1 * seconds / 60))min ${s}s"
+    local min;min=$((-1 * seconds / 60))
+    if [ "${1}" = "-s" ] ; then
+      echo "$min"
+    else
+      local s;s=$((-1 * seconds))
+      while ((s >= 60)) ; do
+        s=$((s - 60))
+      done
+      echo pomodoro time: "${min}min ${s}s"
+    fi
   else
-    echo pomodoro is not running
+    if [ "${1}" = "-s" ] ; then
+      echo -
+    else
+      echo pomodoro is not running
+    fi
   fi
 }
 
