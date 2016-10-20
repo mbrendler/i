@@ -1,14 +1,14 @@
 #! /bin/bash
 
-I_POMODORO_FILE="/tmp/pomodoro"
-I_POMODORO_DEFAULT_MINUTES=25
+I_POMODORO_FILE="${I_POMODORO_FILE:-/tmp/pomodoro.$(id -u)}"
+I_POMODORO_DEFAULT_MINUTES=${I_POMODORO_DEFAULT_MINUTES:-25}
 
 function doc--pomodoro() {
   echo 'pomodoro [up|halt|status] -- start pomodoro'
 }
 
 function run--pomodoro() {
-  case "${1-"$I_POMODORO_DEFAULT_MINUTES"}" in
+  case "${1-}" in
     h*) pomodoro-stop ;;
     u*) pomodoro-start "${2-$I_POMODORO_DEFAULT_MINUTES}";;
     *) pomodoro-status ;;
