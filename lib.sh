@@ -52,7 +52,7 @@ function log_message() {
 }
 
 function log_clear() {
-  rm -f "$LOG_FILE"
+  true > "$LOG_FILE"
 }
 
 function i-view() {
