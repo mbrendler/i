@@ -211,7 +211,7 @@ function get_feature_name() {
   local given_feature="$2"
   local feature_of_pwd; feature_of_pwd="$(get_feature_name_from_path "$PWD")"
   if test -n "$given_feature" ; then
-    echo "$given_feature"
+    complete-feature "$given_feature"
   elif test -n "$feature_of_pwd" ; then
     echo "$feature_of_pwd"
   else
@@ -221,3 +221,10 @@ function get_feature_name() {
   fi
 }
 
+
+function complete-feature() {
+  local feature="$1"
+  if ! installed_features | grep -i "^${feature}$" 2>/dev/null ; then
+    complete-by-list feature "$(installed_features)" "$1"
+  fi
+}

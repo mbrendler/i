@@ -4,7 +4,7 @@ function doc--dir() {
 }
 
 function run--dir() {
-  local feature="$1"
+  local feature;feature="$(get_feature_name dir "${1-}")"
   local feature_dir="$PROJECTS_DIR/$feature"
   if test -n "$feature" ; then
     if test -e "$feature_dir"; then
