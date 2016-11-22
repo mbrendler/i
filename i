@@ -18,6 +18,12 @@ readonly I_ROOT="$HOME/.$I_ENVIRONMENT"
 readonly COMMANDS_DIR="$HERE/commands"
 readonly LOCAL_COMMANDS_DIR="$I_ROOT/commands"
 
+if [ -p /dev/stdout ] ; then
+  readonly IS_PIPE=yes
+else
+  readonly IS_PIPE=no
+fi
+
 command_dirs=( "$COMMANDS_DIR" "$LOCAL_COMMANDS_DIR" )
 
 source "$HERE/lib.sh"
