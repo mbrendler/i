@@ -73,7 +73,7 @@ function i-edit() {
 
 function i-browser() {
   open -g "$@"
-  log osascript <<<'tell application "Safari" to activate'
+  log osascript -e 'tell application "Safari" to activate'
 }
 
 function wait-for-subprocesses() {
