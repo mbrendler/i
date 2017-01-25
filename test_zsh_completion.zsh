@@ -6,7 +6,7 @@ run_completion() {
   local words=()
   for i in {1..$#} ; words[$i]=$@[$i]
   >&2 echo "'$words'"
-  eval "$(cat zsh-completion/_i)"
+  time ( eval "$(cat zsh-completion/_i)" )
 }
 
 _values() {
