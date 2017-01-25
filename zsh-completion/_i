@@ -26,37 +26,49 @@ while (( ++i < CURRENT )); do
 done
 
 if (( $#subcmds + 1 >= $current )) ; then
+  # completion for sub-commands
   local cmds=("${(@f)$(
     ${subcmds} help -a | sed -nE 's/^  ([^ ]*).*-- (.*)/\1[\2]/p'
   )}")
   _values "$subcmds command" $cmds
 else
   local current_argument_pos=$(( $current - $#subcmds ))
-  local argument_type=($(
+  local argument_type_=($(
     $subcmds help -a 2> /dev/null |
       sed -nE "s/^  ($last_command.* [^ ]+) +--.*$/\1/p" |
+      tr -d \[ | tr -d \] |
       awk "{ \
-        if(NF <= $current_argument_pos) print tolower(\$NF) ; \
-        else print tolower(\$$current_argument_pos) \
-      }" |
-      tr _ - | tr -d \[ | tr -d \]
+        if(NF <= $current_argument_pos) print \$NF ; \
+        else print \$$current_argument_pos \
+      }"
   ))
-  if [ "$#argument_type" = 1 ] ; then
+  if echo "$argument_type_" | grep "|\|-" > /dev/null ; then
+    # completion for inline sub-commands
+    local completions=($(echo "$argument_type_" | tr \| \\n))
+    _describe "blubber" completions
+  elif [ "$#argument_type_" = 1 ] ; then
+    local argument_type=($(
+      echo "$argument_type_" | tr _ - | tr '[:upper:]' '[:lower:]' | tr -d '.'
+    ))
     if [ "$argument_type" = file ] ; then
+      # complete file-paths
       _files
     elif [ "$argument_type" = shell-cmd ] ; then
+      # complete unix-commands
       local PWD="$($words[1] dir $words[$i])"
       local words=( ${words:$i} )
       (( CURRENT -= i ))
       _normal
     elif [[ $argument_type =~ ^cmd-args- ]] ; then
+      # complete arguments for unix-commands
       local shell_cmd="${argument_type#cmd-args-}"
       shift words (( i - 1 ))
       (( CURRENT -= i - 2 ))
       words[1]=$shell_cmd
       _normal
     elif [ -n "$argument_type" ] ; then
-      local completions=($(${subcmds} _list-${argument_type}s 2> /dev/null))
+      # complete arguments
+      IFS=$'\n' local completions=($(${subcmds} _list-${argument_type}s 2> /dev/null))
       _describe "$argument_type" completions
     fi
   fi

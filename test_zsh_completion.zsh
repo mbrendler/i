@@ -60,6 +60,8 @@ run_completion 2 i i | assert cd github help
 run_completion 3 i status '' | assert-empty
 run_completion 3 i st '' | assert-empty
 # run_completion 4 i run iwfm gi | assert git
+run_completion 3 i pomodoro '' | assert up halt status
+run_completion 3 i pomodoro 'h' | assert halt
 
 if is-extra-command-installed build ; then
   run_completion 2 i b | assert build cd github help
