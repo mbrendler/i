@@ -27,7 +27,7 @@ done
 
 if (( $#subcmds + 1 >= $current )) ; then
   local cmds=("${(@f)$(
-    ${subcmds} help -a | sed -nE 's/^  ([^ ]*)[^-]*-- (.*)/\1[\2]/p'
+    ${subcmds} help -a | sed -nE 's/^  ([^ ]*).*-- (.*)/\1[\2]/p'
   )}")
   _values "$subcmds command" $cmds
 else
