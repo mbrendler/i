@@ -9,10 +9,10 @@ while (( ++i < CURRENT )); do
   local w=$words[$i]
   if [ "$w[1]" = '-' ] ; then
     local option_args=($(
-      $subcmds help "$last_command" | sed -nE "s/^  -$w[-1]([^-]*)--.*$/\1/p"
+      $subcmds help "$last_command" | sed -nE "s/^  -${w[-1]}([^-]*)--.*$/\1/p"
     ))
     (( i += $#option_args ))
-    test $i -ge $CURRENT && return # current is option-argument
+    test $i -ge $CURRENT && return # current is argument for option
     (( current -= 1 + $#option_args ))
   else
     test -n "$last_command" && break
