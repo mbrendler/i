@@ -11,7 +11,7 @@ EOF
 }
 
 function run--_new-cmd() {
-  commands_dir="$LOCAL_COMMANDS_DIR"
+  local commands_dir="$LOCAL_COMMANDS_DIR"
   local edit_command=echo
   while getopts ":ge" opt; do
     case $opt in
@@ -21,6 +21,7 @@ function run--_new-cmd() {
     esac
   done
   shift "$((OPTIND-1))"
+
   local cmd_path="$1"
   local file_path="$commands_dir/$cmd_path".sh
   if [ -e "$file_path" ] ; then
