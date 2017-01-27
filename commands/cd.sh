@@ -7,13 +7,16 @@ function run--cd() {
   cat << EOF
 # To use this, add the following to your ~/.zshrc:
 
-function i {
-  if test "\$1" = cd ; then
-    shift
-    cd "\$(command i dir "\$@")"
-  else
-    command i "\$@"
-  fi
+i() {
+  local arr=(\$@)
+  for i in {1..\$#} ; do
+    if test "\$@[i]" = 'cd' ; then
+      arr[\$i]=dir
+      cd "\$(command i \$arr)"
+      return
+    fi
+  done
+  command i "\$@"
 }
 EOF
 }
