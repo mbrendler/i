@@ -29,7 +29,7 @@ function run--github() {
     feature="$(get_feature_name github "${1-}")"
     issue="${2-}"
   fi
-  if test -n "$feature" ; then
+  if [ -n "$feature" ] ; then
     url="$I_GITHUB_BASE_URL/$feature"
     test -n "$issue" && url="$url/issues/$issue"
     test -n "$branch" && url="${url}/compare/${branch}?expand=1"
