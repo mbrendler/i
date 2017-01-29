@@ -7,12 +7,12 @@ if test "${DEBUG+x}" ; then
 fi
 
 function readlink-m() {
-  # BSDs readlink does not support -m option:
-  python -c "import os ; print(os.path.realpath('$1'))"
+  # Fallback for realpath with python on BSD:
+  realpath "$0" 2> /dev/null || python -c "import os ; print(os.path.realpath('$1'))"
 }
 
 readonly HERE="$(dirname "$(readlink-m "${BASH_SOURCE[0]}")")"
-readonly I_ENVIRONMENT="${I_ENVIRONMENT:-$(basename "$0")}"
+readonly I_ENVIRONMENT="${I_ENVIRONMENT:-${0##*/}}"
 readonly I_ROOT="$HOME/.$I_ENVIRONMENT"
 
 readonly COMMANDS_DIR="$HERE/commands"
