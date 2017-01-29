@@ -197,9 +197,9 @@ function help-prettify() {
 # -----------------------------------------------------------------------------
 
 function installed_features() {
-  for feature_dir in "$PROJECTS_DIR"/*/.git/ ; do
-    basename "${feature_dir%%/.*}"
-  done
+  pushd "$PROJECTS_DIR"
+  ls -1d -- *
+  popd
 }
 
 function get_feature_name_from_path() {
