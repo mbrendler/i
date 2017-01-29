@@ -126,10 +126,11 @@ function run-completed-command() {
     >&2 help "$prefix"
     exit 1
   fi
-  local cmd;cmd="$(basename "${cmd_script%.*}")"
+
   shift || true
   source "$cmd_script"
-  "run-$prefix-$cmd" "$@"
+  local cmd="${cmd_script##*/}"
+  "run-$prefix-${cmd%.*}" "$@"
 }
 
 # -----------------------------------------------------------------------------
