@@ -179,11 +179,12 @@ function help-for() {
   else
     local match="$base/[^_]*.sh"
   fi
+  local cmd
   for command_script in $match ; do
     test ! -f "$command_script" && continue
     source "$command_script"
-    local cmd;cmd="$(basename "${command_script%.*}")"
-    "doc-$prefix-$cmd"
+    cmd="${command_script##*/}"
+    "doc-$prefix-${cmd%.*}"
   done
 }
 
