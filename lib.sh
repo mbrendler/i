@@ -198,9 +198,9 @@ function help-prettify() {
 # -----------------------------------------------------------------------------
 
 function installed_features() {
-  pushd "$PROJECTS_DIR"
+  log pushd "$PROJECTS_DIR"
   ls -1d -- *
-  popd
+  log popd
 }
 
 function get_feature_name_from_path() {
