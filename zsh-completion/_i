@@ -4,6 +4,7 @@ local subcmds=( $words[1] )
 local current=$CURRENT
 local i=1
 local last_command=
+local arg_types=
 
 while (( ++i < CURRENT )); do
   local w=$words[$i]
@@ -12,15 +13,19 @@ while (( ++i < CURRENT )); do
       $subcmds help "$last_command" | sed -nE "s/^  -${w[-1]}([^-]*)--.*$/\1/p"
     ))
     (( i += $#option_args ))
-    test $i -ge $CURRENT && return # current is argument for option
+    (( $i >= $CURRENT )) && return # current is argument for option
     (( current -= 1 + $#option_args ))
   else
     test -n "$last_command" && break
-    local arg_type="$($subcmds help -a | awk "/^  $w/{print \$2}")"
-    if [ "$arg_type" != CMD ] ; then
-      local last_command=$w
-    else
+    IFS=$'\n' local arg_types_=(
+      $($subcmds help -a | sed -nE "s/^  ($w.* [^ ]+) +--.*\$/\1/p")
+    )
+    (( $#arg_types_ > 1 )) && return
+    arg_types=( $(echo ${arg_types_}) )
+    if [ "${arg_types[2]}" = CMD ] ; then
       subcmds+=($w)
+    else
+      local last_command=$w
     fi
   fi
 done
@@ -33,23 +38,17 @@ if (( $#subcmds + 1 >= $current )) ; then
   _values "$subcmds command" $cmds
 else
   local current_argument_pos=$(( $current - $#subcmds ))
-  local argument_type_=($(
-    $subcmds help -a 2> /dev/null |
-      sed -nE "s/^  ($last_command.* [^ ]+) +--.*$/\1/p" |
-      tr -d \[ | tr -d \] |
-      awk "{ \
-        if(NF <= $current_argument_pos) print \$NF ; \
-        else print \$$current_argument_pos \
-      }"
-  ))
-  if echo "$argument_type_" | grep "|\|-" > /dev/null ; then
+  local argument_type="${arg_types[$current_argument_pos]}"
+  argument_type="${argument_type#\[}"
+  argument_type="${argument_type%\]}"
+  if [[ "$argument_type" =~ "\||-" ]] ; then
     # completion for inline sub-commands
-    local completions=($(echo "$argument_type_" | tr \| \\n))
-    _describe "blubber" completions
-  elif [ "$#argument_type_" = 1 ] ; then
-    local argument_type=($(
-      echo "$argument_type_" | tr _ - | tr '[:upper:]' '[:lower:]' | tr -d '.'
-    ))
+    local completions=($(echo "$argument_type" | tr \| \ ))
+    _describe "$argument_type" completions
+  elif [ -n "$argument_type" ] ; then
+    local argument_type="${argument_type:l}"
+    argument_type="${argument_type%...}"
+    argument_type="${argument_type:s/_/-/}"
     if [ "$argument_type" = file ] ; then
       # complete file-paths
       _files
@@ -66,7 +65,7 @@ else
       (( CURRENT -= i - 2 ))
       words[1]=$shell_cmd
       _normal
-    elif [ -n "$argument_type" ] ; then
+    else
       # complete arguments
       IFS=$'\n' local completions=($(${subcmds} _list-${argument_type}s 2> /dev/null))
       _describe "$argument_type" completions
