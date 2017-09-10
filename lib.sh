@@ -39,11 +39,11 @@ function log() {
 
 function log2() {
   log_message "$*"
-  "$@" 2>> /dev/null
+  "$@" 2>> "$LOG_FILE"
   # TODO synchronize output
   # "$LOG_FILE"
   local result=$?
-  # echo result: $result >> "$LOG_FILE"
+  echo result: $result >> "$LOG_FILE"
   return $result
 }
 
