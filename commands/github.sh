@@ -12,7 +12,7 @@ EOF
 function run--github() {
   local feature
   local issue
-  local branch
+  local branch=""
   local url="$I_GITHUB_BASE_URL"
   if [ "${1-}" = '-p' ] ; then
     branch="$(github-current-branch)"
