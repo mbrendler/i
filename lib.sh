@@ -103,7 +103,7 @@ function complete-by-list() {
 function get-completed-command() {
   local cmd=$1
   shift
-  local command_files=( $(find -L "$@" -depth 1 -name "$cmd"\*.sh 2> /dev/null) )
+  local command_files=( $(log2 find -L "$@" -maxdepth 1 -name "$cmd"\*.sh) )
   if [ ${#command_files[@]} -eq 1 ] ; then
     echo "${command_files[0]}"
   elif [ ${#command_files[@]} -gt 1 ] ; then
