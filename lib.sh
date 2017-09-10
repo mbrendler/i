@@ -10,6 +10,7 @@ function read_config() {
   LOG_FILE=${LOG_FILE-"$I_ROOT/log"}
   I_EDITOR=${I_EDITOR-${EDITOR-vim}}
   I_GITHUB_BASE_URL=$I_GITHUB_BASE_URL
+  I_BROWSER=${I_BROWSER-${BROWSER-w3m}}
 }
 
 function pretty() {
@@ -71,9 +72,13 @@ function i-edit() {
   fi
 }
 
-function i-browser() {
+function i-safari() {
   open -g "$@"
   log osascript -e 'tell application "Safari" to activate'
+}
+
+function i-browser() {
+  $I_BROWSER "$@"
 }
 
 function wait-for-subprocesses() {
