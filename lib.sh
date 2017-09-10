@@ -72,6 +72,10 @@ function i-edit() {
   fi
 }
 
+function i-qutebrowser() {
+  log "$HOME/Applications/qutebrowser.app/Contents/MacOS/qutebrowser" "$@"
+}
+
 function i-safari() {
   open -g "$@"
   log osascript -e 'tell application "Safari" to activate'
