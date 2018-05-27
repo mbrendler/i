@@ -39,6 +39,9 @@ if (( $#subcmds + 1 >= $current )) ; then
 else
   local current_argument_pos=$(( $current - $#subcmds ))
   local argument_type="${arg_types[$current_argument_pos]}"
+  if [ -z "$argument_type" ] && [[ "$arg_types[-1]" =~ '\.\..$' ]] ; then
+    local argument_type="${arg_types[-1]}"
+  fi
   argument_type="${argument_type#\[}"
   argument_type="${argument_type%\]}"
   if [[ "$argument_type" =~ "\||-" ]] ; then
