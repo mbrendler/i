@@ -66,12 +66,12 @@ run_completion 3 i pomodoro 'h' | assert halt
 if is-extra-command-installed build ; then
   run_completion 2 i b | assert build cd github help
   run_completion 3 i build '' | assert help get last-log
-  run_completion 4 i build fail '' | assert frankenstein injixo opti xlink
-  run_completion 5 i build fail frank '' | assert ies.log security.log
-  run_completion 5 i build last-log -t '' | assert frankenstein injixo opti
+  run_completion 4 i build fail '' | assert ii-client injixo sdk xlink
+  run_completion 5 i build fail inj '' | assert ies.log security.log
+  run_completion 5 i build last-log -t '' | assert ii-client injixo
   run_completion 6 i build last-log -t fr-ank '' | assert ies.log
   run_completion 6 i build last-log -t -s '' | assert-empty
-  run_completion 7 i build last-log -t -s 10 '' | assert frankenstein injixo
+  run_completion 7 i build last-log -t -s 10 '' | assert ii-client injixo
 fi
 
 if is-extra-command-installed crawl ; then
