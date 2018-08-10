@@ -198,9 +198,14 @@ function help-for() {
   done
 }
 
+# workaround for 'wc -L' for BSD userland:
+function longest-line() {
+  awk '{ print length() }' | sort -rn | head -n 1
+}
+
 function help-prettify() {
   local raw;raw="$(cat)"
-  local width;width="$(sed -E 's/^ *([^ ].*[^ ]) *--.*$/\1/g' <<< "$raw" | wc -L)"
+  local width;width="$(sed -E 's/^ *([^ ].*[^ ]) *--.*$/\1/g' <<< "$raw" | longest-line)"
   awk -F ' -- ' "{ printf(\"  %-${width}s -- %s\n\", \$1, \$2) }" <<< "$raw"
 }
 
