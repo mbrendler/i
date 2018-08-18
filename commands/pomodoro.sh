@@ -8,10 +8,17 @@ function doc--pomodoro() {
 }
 
 function run--pomodoro() {
-  case "${1-}" in
-    h*) pomodoro-stop ;;
-    u*) pomodoro-start "${2-$I_POMODORO_DEFAULT_MINUTES}";;
-    *) pomodoro-status "${2-}";;
+  local commands=$"
+halt
+up
+status
+"
+  local cmd;cmd="$(complete-by-list command "$commands" "${1:-status}")"
+
+  case "$cmd" in
+    halt) pomodoro-stop ;;
+    up) pomodoro-start "${2-$I_POMODORO_DEFAULT_MINUTES}";;
+    status) pomodoro-status "${2-}";;
   esac
 }
 
