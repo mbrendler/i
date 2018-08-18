@@ -159,10 +159,12 @@ function help() {
       $(find "${prefix_command_dirs[@]}" -depth 1 -name "$1"\*.sh 2> /dev/null || true)
     )
     if [ "${#command_files[@]}" -eq 1 ] ; then
+      local cmd="${command_files[0]##*/}"
+      cmd="${cmd%.sh}"
       source "$command_files"
-      echo "$0 $prefix $("doc-$prefix-$1")"
+      echo "$0 $prefix $("doc-$prefix-$cmd")"
       echo
-      ("doc-$prefix-$1-options" 2> /dev/null || true) | help-prettify
+      ("doc-$prefix-$cmd-options" 2> /dev/null || true) | help-prettify
       exit 0
     fi
   fi
@@ -205,8 +207,10 @@ function longest-line() {
 
 function help-prettify() {
   local raw;raw="$(cat)"
-  local width;width="$(sed -E 's/^ *([^ ].*[^ ]) *--.*$/\1/g' <<< "$raw" | longest-line)"
-  awk -F ' -- ' "{ printf(\"  %-${width}s -- %s\n\", \$1, \$2) }" <<< "$raw"
+  if [ -n "$raw" ] ; then
+    local width;width="$(sed -E 's/^ *([^ ].*[^ ]) *--.*$/\1/g' <<< "$raw" | longest-line)"
+    awk -F ' -- ' "{ printf(\"  %-${width}s -- %s\n\", \$1, \$2) }" <<< "$raw"
+  fi
 }
 
 # -----------------------------------------------------------------------------
