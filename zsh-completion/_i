@@ -70,8 +70,18 @@ else
       _normal
     else
       # complete arguments
-      IFS=$'\n' local completions=($(${subcmds} _list-${argument_type}s 2> /dev/null))
-      _describe "$argument_type" completions
+      IFS=$'\n' local completions=(
+        $(
+          ${subcmds} _list-${argument_type}s 2> /dev/null ;
+          test "$current_argument_pos" = 2 &&
+            ${subcmds} help ${last_command} 2> /dev/null |
+              sed -nE 's/^  ([^ ]+).*-- (.*)/\1[\2]/p'
+        )
+      )
+      # _describe "$argument_type" completions
+      if [ -n "${completions}" ] ; then
+        _values "$subcmds $last_command $argument_type" $completions
+      fi
     fi
   fi
 fi
