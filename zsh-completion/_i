@@ -1,4 +1,4 @@
-#compdef i
+#compdef i drain
 
 local subcmds=( $words[1] )
 local current=$CURRENT
