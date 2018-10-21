@@ -2,6 +2,7 @@
 
 I_POMODORO_FILE="${I_POMODORO_FILE:-/tmp/pomodoro.$(id -u)}"
 I_POMODORO_DEFAULT_MINUTES=${I_POMODORO_DEFAULT_MINUTES:-25}
+I_POMODORO_COMPLETE=${I_POMODORO_COMPLETE:-'osascript -e "display notification \"complete\" with title \"pomodoro\""'}
 
 function doc--pomodoro() {
   echo 'pomodoro [up|halt|status] -- start pomodoro'
@@ -25,7 +26,7 @@ status
 function pomodoro-start() {
   local minutes="$1"
   if ! pomodoro-is-running ; then
-    nohup bash -c "echo \$\$ ; echo $minutes ; sleep $((minutes * 60)) ; n complete pomodoro" > "$I_POMODORO_FILE" 2> "$I_POMODORO_FILE.err" &
+    nohup bash -c "echo \$\$ ; echo $minutes ; sleep $((minutes * 60)) ; $I_POMODORO_COMPLETE" > "$I_POMODORO_FILE" 2> "$I_POMODORO_FILE.err" &
   else
     echo pomodoro is already running
     pomodoro-status
