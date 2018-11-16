@@ -55,9 +55,13 @@ function pomodoro-status() {
     if [ "${1}" = "-s" ] ; then
       echo -
     else
-      echo pomodoro is not running
+      echo "last pomodoro finished: $(pomodoro-format-time $(pomodoro-finished-at))"
     fi
   fi
+}
+
+function pomodoro-format-time() {
+  /bin/date -r "$1" '+%F %H:%M:%S'
 }
 
 function pomodoro-previous-pid() {
@@ -69,9 +73,20 @@ function pomodoro-previous-minutes() {
 }
 
 function pomodoro-current-time() {
-  local last_pomodoro_started;last_pomodoro_started="$(stat -c %Y "$I_POMODORO_FILE")"
-  local current_time;current_time="$(date +%s)"
-  echo $((current_time - last_pomodoro_started - 60 * $(pomodoro-previous-minutes)))
+  local started_at;started_at="$(pomodoro-started-at)"
+  local now;now="$(date +%s)"
+  local duration;duration="$(pomodoro-previous-minutes)"
+  echo $((now - started_at - 60 * duration))
+}
+
+function pomodoro-started-at() {
+  stat -c %Y "$I_POMODORO_FILE"
+}
+
+function pomodoro-finished-at() {
+  local started_at;started_at="$(pomodoro-started-at)"
+  local duration;duration="$(pomodoro-previous-minutes)"
+  echo $((started_at + duration * 60))
 }
 
 function pomodoro-is-running() {
